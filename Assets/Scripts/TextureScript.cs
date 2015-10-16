@@ -22,8 +22,8 @@ public class TextureScript : MonoBehaviour {
                     backFacing = device;
                 }
             }
-
-            webcamTexture = new WebCamTexture(backFacing.name);
+            webcamTexture = new WebCamTexture(backFacing.name, 1024, 768);
+   
             GetComponent<Renderer>().material.SetTexture("_MainTex", webcamTexture);
             webcamTexture.Play();
         } else
@@ -34,5 +34,5 @@ public class TextureScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	}
+    }
 }
