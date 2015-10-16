@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class TextureScript : MonoBehaviour {
-    private Renderer renderer;
     private WebCamTexture webcamTexture;
+    private WebCamDevice backFacing;
 
     // Use this for initialization
     void Start () {
@@ -11,21 +11,28 @@ public class TextureScript : MonoBehaviour {
         if (Application.HasUserAuthorization(UserAuthorization.WebCam))
         {
             Debug.Log("access to webcam granted!");
-            webcamTexture = new WebCamTexture();
+            Debug.Log("#WebCamDevices: " + WebCamTexture.devices.GetLength(0).ToString());
+
+            foreach (WebCamDevice device in WebCamTexture.devices)
+            {
+                Debug.Log("WebCamDevice: " + device.name);
+                Debug.Log("FrontFacing? " + device.isFrontFacing);
+                if (!device.isFrontFacing)
+                {
+                    backFacing = device;
+                }
+            }
+
+            webcamTexture = new WebCamTexture(backFacing.name);
+            GetComponent<Renderer>().material.SetTexture("_MainTex", webcamTexture);
             webcamTexture.Play();
-            renderer = GetComponent<Renderer>();
-            renderer.material.mainTexture = webcamTexture;
         } else
         {
-            Debug.Log("No User Authorization for Camera Device.");
+            Debug.LogError("No User Authorization for Camera Device.");
         }
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (webcamTexture.didUpdateThisFrame)
-        {
-            renderer.material.mainTexture = webcamTexture;
-        }
 	}
 }
