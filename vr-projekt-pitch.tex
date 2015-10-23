@@ -1,0 +1,44 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+
+\subject{Praktikum Virtuelle Realität und Simulation} %TODO: richtiger name?
+\title{Augmented Reality mit Google Cardboard}
+\author{Mervyn McCreight \and Tim Pauls}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Projektziel}
+Das Ziel des Projektes ist eine Simulation von erweiterter Realität mit Hilfe eines Google-Cardboards und einem Android Handy zu erschaffen.
+Eine Herausforderung dabei ist, sich ein Vorgehen zu überlegen mit dem man Augmented Reality mit dem Google-Cardboard ermöglichen kann,
+da das Google Cardboard konzeptionell für das Umsetzen von virtueller Realität gedacht ist. Das Ergebnis des Projekts wird also eine ausführbare
+Cardboard-kompatible Android Applikation sein.
+
+\section{Google Cardboard}
+Bei dem Google Cardboard handelt es sich um eine Initiative von Google, die das Ziel hat, Menschen virtuelle Realität zu möglichst geringen Kosten
+zugängig zu machen. Grundsätzlich stellt das Cardboard einen offenen Standard zur Konstruktion eines VR-Headsets dar, in dem ein Smartphone als
+Bildschirm und Bewegungsmesser eingesetzt wird.
+
+\section{Projektinhalt}
+Die Umsetzung des Projektziels erfordert vor der eigentlichen Implementierung eine Reihe von Vorüberlegungen und Nachforschungen.
+
+\subsection{Platzierung der Erweiterungsobjekte}
+Eine Herausforderung ist, dass die virtuellen Erweiterungen der Realität sich für den Betrachter scheinbar am selben Punkt befinden müssen.
+Hierfür müssen die Objekte sich dynamisch mit dem Bild der Realität mitbewegen. Es gilt also einen Zusammenhang zwischen Realität und den eingefügten
+Objekten herzustellen. Es gilt zu untersuchen auf welche Art und Weise sich dieses für die Zwecke dieses Projekts am Besten umsetzen lässt.
+
+\subsection{Entwicklungsumgebung}
+Weiter gilt es herauszufinden, welche Art von Entwicklungsumgebung sich am Besten dafür eignet ein solches Projekt umzusetzen.
+Hierfür gibt es generell zwei verschiedene Ansätze, die es zu evaluieren gilt:
+\begin{description}
+  \item[natives Android]
+  Entwickeln in Java mit dem Android-SDK und dem offiziellen Cardboard-SDK und OpenGL-ES.
+  \item[Engines]
+  Das Verwenden von Engines, die für mobile Geräte geeignet sind (z.B. Unreal Engine oder Unity3D). Hierbei gilt es auch herauszufinden
+  inwiefern eine Engine mit dem Google-Cardboard kompatibel ist (Stereoskopie, etc.).
+\end{description}
+Grundlegende Gesichtspunkte sind hierbei der resultierende Arbeitsaufwand und die Performance zur Laufzeit.
+
+\end{document}
