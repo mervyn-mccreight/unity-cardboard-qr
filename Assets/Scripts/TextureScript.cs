@@ -2,12 +2,16 @@
 using UnityEngine;
 using ZXing;
 using ZXing.QrCode;
+using UnityEngine.UI;
 
 public class TextureScript : MonoBehaviour {
-    private WebCamTexture webcamTexture;
+	public Text uiText;
+
+	private WebCamTexture webcamTexture;
     private WebCamDevice backFacing;
     private Thread qrCodeThread;
     private bool runThread = true;
+	private QRCodeData qrCodeData;
 
     // Use this for initialization
     void Start () {
@@ -49,6 +53,16 @@ public class TextureScript : MonoBehaviour {
             if (result != null)
             {
                 ResultPoint[] points = result.ResultPoints;
+
+				if (qrCodeData == null) {
+					qrCodeData = new QRCodeData(points, null);
+				} else {
+					qrCodeData.Update(points);
+				}
+
+				uiText.text = qrCodeData.ToString();
+
+				/*
                 Vector3 start = new Vector3((points[0].X - webcamTexture.width / 2) / (float)webcamTexture.width * 1.334f * 10 * -1, 0, (points[0].Y - webcamTexture.height / 2) / (float)webcamTexture.height * 10);
                 Vector3 end1 = new Vector3((points[1].X - webcamTexture.width / 2) / (float)webcamTexture.width * 1.334f * 10 * -1, 0, (points[1].Y - webcamTexture.height / 2) / (float)webcamTexture.height * 10);
                 Vector3 end2 = new Vector3((points[2].X - webcamTexture.width / 2) / (float)webcamTexture.width * 1.334f * 10 * -1, 0, (points[2].Y - webcamTexture.height / 2) / (float)webcamTexture.height * 10);
@@ -61,6 +75,7 @@ public class TextureScript : MonoBehaviour {
                 objects[0].transform.localPosition = start;
                 objects[1].transform.localPosition = end1;
                 objects[2].transform.localPosition = end2;
+				*/
 
                 Debug.Log(result.ToString());
             }
@@ -83,4 +98,27 @@ public class TextureScript : MonoBehaviour {
         qrCodeThread.Abort();
         webcamTexture.Stop();
     }
+
+	private class QRCodeData {
+		private ResultPoint[] resultPoints;
+		private GameObject model;
+
+		public QRCodeData(ResultPoint[] resultPoints, GameObject model) {
+			this.resultPoints = resultPoints;
+			this.model = model;
+		}
+
+		public void Update(ResultPoint[] newResultPoints) {
+			this.resultPoints = newResultPoints;
+		}
+
+		public override string ToString ()
+		{
+			string result = "";
+			foreach (ResultPoint resultPoint in this.resultPoints) {
+				result = result + string.Format("({0}, {1})", resultPoint.X, resultPoint.Y) + System.Environment.NewLine;
+			}
+			return result;
+		}
+	}
 }
