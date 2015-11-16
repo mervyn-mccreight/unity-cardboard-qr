@@ -3,6 +3,8 @@ using UnityEngine;
 using ZXing;
 using ZXing.QrCode;
 using UnityEngine.UI;
+using ZXing.QrCode.Internal;
+using ZXing.Common;
 
 public class TextureScript : MonoBehaviour {
 	public Text uiText;
@@ -48,11 +50,17 @@ public class TextureScript : MonoBehaviour {
     {
         while (runThread)
         {
-            BarcodeReader reader = new BarcodeReader();
-            Result result = reader.Decode(webcamTexture.GetPixels32(), webcamTexture.width, webcamTexture.height);
+
+			LuminanceSource lum = new Color32LuminanceSource(webcamTexture.GetPixels32(), webcamTexture.width, webcamTexture.height);
+			HybridBinarizer bin = new HybridBinarizer(lum);
+			BinaryBitmap binBip = new BinaryBitmap(bin);
+			BitMatrix matrix = binBip.BlackMatrix;
+			Detector detector = new Detector(matrix);
+
+			DetectorResult result = detector.detect();
             if (result != null)
             {
-                ResultPoint[] points = result.ResultPoints;
+                ResultPoint[] points = result.Points;
 
 				if (qrCodeData == null) {
 					qrCodeData = new QRCodeData(points, null);
@@ -62,7 +70,6 @@ public class TextureScript : MonoBehaviour {
 
 				uiText.text = qrCodeData.ToString();
 
-				/*
                 Vector3 start = new Vector3((points[0].X - webcamTexture.width / 2) / (float)webcamTexture.width * 1.334f * 10 * -1, 0, (points[0].Y - webcamTexture.height / 2) / (float)webcamTexture.height * 10);
                 Vector3 end1 = new Vector3((points[1].X - webcamTexture.width / 2) / (float)webcamTexture.width * 1.334f * 10 * -1, 0, (points[1].Y - webcamTexture.height / 2) / (float)webcamTexture.height * 10);
                 Vector3 end2 = new Vector3((points[2].X - webcamTexture.width / 2) / (float)webcamTexture.width * 1.334f * 10 * -1, 0, (points[2].Y - webcamTexture.height / 2) / (float)webcamTexture.height * 10);
@@ -75,7 +82,6 @@ public class TextureScript : MonoBehaviour {
                 objects[0].transform.localPosition = start;
                 objects[1].transform.localPosition = end1;
                 objects[2].transform.localPosition = end2;
-				*/
 
                 Debug.Log(result.ToString());
             }
