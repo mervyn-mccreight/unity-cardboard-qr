@@ -5,6 +5,7 @@ using ZXing.QrCode;
 using UnityEngine.UI;
 using ZXing.QrCode.Internal;
 using ZXing.Common;
+using System.Collections.Generic;
 
 public class TextureScript : MonoBehaviour {
 	public Text uiText;
@@ -13,7 +14,7 @@ public class TextureScript : MonoBehaviour {
     private WebCamDevice backFacing;
     private Thread qrCodeThread;
     private bool runThread = true;
-	private QRCodeData qrCodeData;
+	private QRCodeCollection qrCodeCollection = new QRCodeCollection();
 
 	private Color32[] pixels = null;
 	private static int CAM_WIDTH = 1024;
@@ -61,15 +62,7 @@ public class TextureScript : MonoBehaviour {
 				Detector detector = new Detector(matrix);
 
 				DetectorResult result = detector.detect();
-	            if (result != null) {
-	                ResultPoint[] points = result.Points;
-
-					if (qrCodeData == null) {
-						qrCodeData = new QRCodeData(points, null);
-					} else {
-						qrCodeData.Update(points);
-					}
-	            }
+				qrCodeCollection.Update(result);
 			}
         }
     }
@@ -77,19 +70,17 @@ public class TextureScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// first draw upon the old data.
-		if (qrCodeData != null) {
-			uiText.text = qrCodeData.ToString();
-			
-			Vector3 start = new Vector3((qrCodeData.GetPoints()[0].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (qrCodeData.GetPoints()[0].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
-			Vector3 end1 = new Vector3((qrCodeData.GetPoints()[1].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (qrCodeData.GetPoints()[1].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
-			Vector3 end2 = new Vector3((qrCodeData.GetPoints()[2].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (qrCodeData.GetPoints()[2].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
-			
-			GameObject[] objects = GameObject.FindGameObjectsWithTag("c1");
-			
-			objects[0].transform.localPosition = start;
-			objects[1].transform.localPosition = end1;
-			objects[2].transform.localPosition = end2;
-		}
+		uiText.text = qrCodeCollection.ToString();
+		
+		//Vector3 start = new Vector3((qrCodeData.GetPoints()[0].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (qrCodeData.GetPoints()[0].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
+		//Vector3 end1 = new Vector3((qrCodeData.GetPoints()[1].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (qrCodeData.GetPoints()[1].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
+		//Vector3 end2 = new Vector3((qrCodeData.GetPoints()[2].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (qrCodeData.GetPoints()[2].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
+		
+		//GameObject[] objects = GameObject.FindGameObjectsWithTag("c1");
+		
+		//objects[0].transform.localPosition = start;
+		//objects[1].transform.localPosition = end1;
+		//objects[2].transform.localPosition = end2;
 
 		// then fetch new data for new calculations.
 		pixels = webcamTexture.GetPixels32 ();
@@ -129,6 +120,40 @@ public class TextureScript : MonoBehaviour {
 			foreach (ResultPoint resultPoint in this.resultPoints) {
 				result = result + string.Format("({0}, {1})", resultPoint.X, resultPoint.Y) + System.Environment.NewLine;
 			}
+			return result;
+		}
+	}
+
+	private class QRCodeCollection {
+		private List<QRCodeData> data = new List<QRCodeData>();
+
+		public void Update(DetectorResult result) {
+			if (result == null) {
+				// if there is no qr-code in the image, clear the area.
+				data.Clear();
+				return;
+			}
+
+			ResultPoint[] points = result.Points;
+
+			if (data.Count == 0) {
+				data.Add(new QRCodeData(points, null));
+			} else {
+				// @TODO: Apply more logic here, lol.
+				var enumerator = data.GetEnumerator();
+				enumerator.MoveNext();
+				enumerator.Current.Update(points);
+			}
+		}
+
+		public override string ToString () {
+			if (data.Count == 0) {
+				return "[]";
+			}
+
+			string result = "[" + System.Environment.NewLine;
+			result = result + string.Join (",", this.data.ConvertAll (x => x.ToString ()).ToArray ());
+			result = result + "]";
 			return result;
 		}
 	}
