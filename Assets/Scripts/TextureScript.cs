@@ -35,6 +35,7 @@ public class TextureScript : MonoBehaviour {
                     backFacing = device;
                 }
             }
+
             webcamTexture = new WebCamTexture(backFacing.name, CAM_WIDTH, CAM_HEIGHT);
    
             GetComponent<Renderer>().material.SetTexture("_MainTex", webcamTexture);
@@ -55,7 +56,6 @@ public class TextureScript : MonoBehaviour {
     void DecodeQR() {
         while (runThread) {
 			if (pixels != null) {
-
 				LuminanceSource lum = new Color32LuminanceSource(pixels, CAM_WIDTH, CAM_HEIGHT);
 				HybridBinarizer bin = new HybridBinarizer(lum);
 				BinaryBitmap binBip = new BinaryBitmap(bin);
@@ -185,6 +185,8 @@ public class TextureScript : MonoBehaviour {
 			return result;
 		}
 
+		// Destroy the marked objects.
+		// Call this only from the Unity mainthread.
 		public void DestroyMarkedOnUpdate() {
 			this.data.ForEach (delegate(QRCodeData obj) {
 				if (obj.IsMarkedAsDestroy()) {
@@ -206,10 +208,9 @@ public class TextureScript : MonoBehaviour {
 				// we have to create the game object referred by the code later in here.
 				if (code.GetModel() == null) {
 					var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+					cube.transform.parent = parent;
 					code.SetModel(cube);
 				}
-
-				code.GetModel().transform.parent = parent;
 
 				// TODO: the whole center of a qr code calculation is fucked up, lol.
 				//var p1 = new Vector3(code.GetPoints()[0].X, code.GetPoints()[0].Y);
