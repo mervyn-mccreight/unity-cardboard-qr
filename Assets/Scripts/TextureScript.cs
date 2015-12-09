@@ -55,7 +55,9 @@ public class TextureScript : MonoBehaviour {
 	// access the Unity-API from another thread than the main-thread.
     void DecodeQR() {
         while (runThread) {
+			// waiting.
 			if (pixels != null) {
+				// running.
 				LuminanceSource lum = new Color32LuminanceSource(pixels, CAM_WIDTH, CAM_HEIGHT);
 				HybridBinarizer bin = new HybridBinarizer(lum);
 				BinaryBitmap binBip = new BinaryBitmap(bin);
@@ -78,6 +80,13 @@ public class TextureScript : MonoBehaviour {
 
 		// update the qr code object drawings.
 		this.qrCodeCollection.Update (transform);
+
+		//TODO:
+		// pixels hat ein boolean, dass sagt ob der aktuelle stand schon bearbeitet wurde.
+		// pixels wird nur neu beschrieben, wenn der qrcode thread gerade NICHT in der analyse ist.
+		// nach der analyse setzt der qrcode thread das boolean auf true.
+		// der qr code thread bearbeitet pixels nur, wenn es bisher nicht analysiert wurde (bool false).
+		// idee: synchronisation über das wrapper objekt mit bool und pixels.
 
 		// then fetch new data for new calculations.
 		pixels = webcamTexture.GetPixels32 ();
@@ -208,7 +217,7 @@ public class TextureScript : MonoBehaviour {
 				// we have to create the game object referred by the code later in here.
 				if (code.GetModel() == null) {
 					var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-					cube.transform.parent = parent;
+					cube.transform.SetParent(parent);
 					code.SetModel(cube);
 				}
 
