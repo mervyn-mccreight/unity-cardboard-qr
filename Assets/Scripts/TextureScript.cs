@@ -21,6 +21,9 @@ public class TextureScript : MonoBehaviour {
 	private static int CAM_WIDTH = 1024;
 	private static int CAM_HEIGHT = 768;
 
+    private static float KEEP_ALIVE_TIME = 0.5f;
+    private static float INTERPOLATION_SPEED = 2f;
+
     // Use this for initialization
     void Start () {
 
@@ -147,7 +150,7 @@ public class TextureScript : MonoBehaviour {
                 return false;
             }
 
-            return Time.time - this.destroyTime > 0.5f;
+            return Time.time - this.destroyTime > KEEP_ALIVE_TIME;
 		}
 
 		public override string ToString () {
@@ -211,7 +214,7 @@ public class TextureScript : MonoBehaviour {
             var start = GetModel().transform.localPosition;
             var end = CenterToPlane();
 
-            var traveledDistance = (Time.time - this.time) * 2f;
+            var traveledDistance = (Time.time - this.time) * INTERPOLATION_SPEED;
             var totalDistance = Vector3.Distance(start, end);
 
             GetModel().transform.localPosition = Vector3.Lerp(start, end, traveledDistance/totalDistance);
