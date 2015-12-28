@@ -222,38 +222,40 @@ public class TextureScript : MonoBehaviour {
 				}
 
 				// TODO: the whole center of a qr code calculation is fucked up, lol.
-				//var p1 = new Vector3(code.GetPoints()[0].X, code.GetPoints()[0].Y);
-				//var p2 = new Vector3(code.GetPoints()[1].X, code.GetPoints()[1].Y);
-				//var p3 = new Vector3(code.GetPoints()[2].X, code.GetPoints()[2].Y);
+				var p1 = new Vector3(code.GetPoints()[0].X, code.GetPoints()[0].Y);
+				var p2 = new Vector3(code.GetPoints()[1].X, code.GetPoints()[1].Y);
+				var p3 = new Vector3(code.GetPoints()[2].X, code.GetPoints()[2].Y);
 
-				//var ab = p1 - p2;
-				//var ac = p1 - p3;
-				//var bc = p2 - p3;
+				var ab = p2 - p1;
+				var ac = p3 - p1;
+				var bc = p3 - p2;
 
-				//Vector3 max = new Vector3(0, 0);
+				Vector3 max = new Vector3(0, 0);
+                
+                //// find the longest line.
+				if (ab.magnitude > ac.magnitude) {
+					max = ab;
+				} else {
+					max = ac;
+				}
 
-				//// find the longest line.
-				//if (ab.magnitude > ac.magnitude) {
-				//	max = ab;
-				//} else {
-				//	max = ac;
-				//}
+				if (bc.magnitude > max.magnitude) {
+					max = bc;
+				}
 
-				//if (bc.magnitude > max.magnitude) {
-				//	max = bc;
-				//}
+				Vector3 position = new Vector3(0, 0);
+				if (max == ab || max == ac) {
+					position = p1 + (max / 2);
+				} else {
+					position = p2 + (max / 2);
+				}
 
-				//Vector3 position = new Vector3(0, 0);
-				//if (max == ab || max == ac) {
-				//	position = p1 + (max / 2);
-				//} else {
-				//	position = p2 + (max / 2);
-				//}
+                Vector3 start = new Vector3((position.x - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (position.y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
 
-				//TODO: use center instead of just one point for the position.
-				Vector3 position = new Vector3((code.GetPoints()[0].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (code.GetPoints()[0].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
-				//code.GetModel().gameObject.transform.localPosition = position;
-				code.GetModel().transform.localPosition = position;
+                //TODO: use center instead of just one point for the position.
+                //Vector3 position = new Vector3((code.GetPoints()[0].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (code.GetPoints()[0].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
+                //code.GetModel().gameObject.transform.localPosition = position;
+                code.GetModel().transform.localPosition = start;
 			});
 		}
 	}
