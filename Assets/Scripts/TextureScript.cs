@@ -169,7 +169,7 @@ public class TextureScript : MonoBehaviour {
 			return result;
 		}
 
-        public Vector3 CenterToPlane()
+        private Vector3 diagonal()
         {
             var p1 = new Vector3(this.target[0].X, this.target[0].Y);
             var p2 = new Vector3(this.target[1].X, this.target[1].Y);
@@ -196,6 +196,20 @@ public class TextureScript : MonoBehaviour {
                 max = bc;
             }
 
+            return max;
+        }
+
+        public Vector3 CenterToPlane()
+        {
+            var p1 = new Vector3(this.target[0].X, this.target[0].Y);
+            var p2 = new Vector3(this.target[1].X, this.target[1].Y);
+            var p3 = new Vector3(this.target[2].X, this.target[2].Y);
+
+            var ab = p2 - p1;
+            var ac = p3 - p1;
+
+            var max = diagonal();
+
             Vector3 position = new Vector3(0, 0);
             if (max == ab || max == ac)
             {
@@ -209,6 +223,11 @@ public class TextureScript : MonoBehaviour {
             return new Vector3((position.x - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (position.y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
         }
 
+        private Vector3 scaleFactor()
+        {
+            return Vector3.one * diagonal().magnitude / 100f;
+        }
+
         public void InterpolatePosition()
         {
             var start = GetModel().transform.localPosition;
@@ -218,6 +237,8 @@ public class TextureScript : MonoBehaviour {
             var totalDistance = Vector3.Distance(start, end);
 
             GetModel().transform.localPosition = Vector3.Lerp(start, end, traveledDistance/totalDistance);
+
+            GetModel().transform.localScale = scaleFactor();
         }
     }
 
