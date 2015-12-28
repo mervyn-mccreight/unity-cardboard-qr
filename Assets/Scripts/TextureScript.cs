@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using ZXing.QrCode.Internal;
 using ZXing.Common;
 using System.Collections.Generic;
+using System;
 
 public class TextureScript : MonoBehaviour {
 	public Text uiText;
@@ -105,21 +106,24 @@ public class TextureScript : MonoBehaviour {
 
 	// Class for Mapping QR-Code Data to a Unity GameObject.
 	private class QRCodeData {
-		private ResultPoint[] resultPoints;
+		private ResultPoint[] target;
 		private GameObject model;
 		private bool destroy = false;
+        private float time;
 
 		public QRCodeData(ResultPoint[] resultPoints, GameObject model) {
-			this.resultPoints = resultPoints;
+			this.target = resultPoints;
 			this.model = model;
+            this.time = Time.time;
 		}
 
 		public void Update(ResultPoint[] newResultPoints) {
-			this.resultPoints = newResultPoints;
+			this.target = newResultPoints;
+            this.time = Time.time;
 		}
 
 		public ResultPoint[] GetPoints() {
-			return this.resultPoints;
+			return this.target;
 		}
 
 		public void SetModel(GameObject model) {
@@ -140,7 +144,7 @@ public class TextureScript : MonoBehaviour {
 
 		public override string ToString () {
 			string result = "";
-			foreach (ResultPoint resultPoint in this.resultPoints) {
+			foreach (ResultPoint resultPoint in this.target) {
 				result = result + string.Format("({0}, {1})", resultPoint.X, resultPoint.Y) + System.Environment.NewLine;
 			}
 
@@ -153,7 +157,58 @@ public class TextureScript : MonoBehaviour {
 			result = result + "Type =" + modelString + System.Environment.NewLine;
 			return result;
 		}
-	}
+
+        public Vector3 CenterToPlane()
+        {
+            var p1 = new Vector3(this.target[0].X, this.target[0].Y);
+            var p2 = new Vector3(this.target[1].X, this.target[1].Y);
+            var p3 = new Vector3(this.target[2].X, this.target[2].Y);
+
+            var ab = p2 - p1;
+            var ac = p3 - p1;
+            var bc = p3 - p2;
+
+            Vector3 max = new Vector3(0, 0);
+
+            //// find the longest line.
+            if (ab.magnitude > ac.magnitude)
+            {
+                max = ab;
+            }
+            else
+            {
+                max = ac;
+            }
+
+            if (bc.magnitude > max.magnitude)
+            {
+                max = bc;
+            }
+
+            Vector3 position = new Vector3(0, 0);
+            if (max == ab || max == ac)
+            {
+                position = p1 + (max / 2);
+            }
+            else
+            {
+                position = p2 + (max / 2);
+            }
+
+            return new Vector3((position.x - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (position.y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
+        }
+
+        public void InterpolatePosition()
+        {
+            var start = GetModel().transform.localPosition;
+            var end = CenterToPlane();
+
+            var traveledDistance = (Time.time - this.time) * 2f;
+            var totalDistance = Vector3.Distance(start, end);
+
+            GetModel().transform.localPosition = Vector3.Lerp(start, end, traveledDistance/totalDistance);
+        }
+    }
 
 	private class QRCodeCollection {
 		private List<QRCodeData> data = new List<QRCodeData>();
@@ -218,44 +273,12 @@ public class TextureScript : MonoBehaviour {
 				if (code.GetModel() == null) {
 					var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 					cube.transform.SetParent(parent);
+                    cube.transform.localPosition = code.CenterToPlane();
 					code.SetModel(cube);
+                    return;
 				}
 
-				// TODO: the whole center of a qr code calculation is fucked up, lol.
-				var p1 = new Vector3(code.GetPoints()[0].X, code.GetPoints()[0].Y);
-				var p2 = new Vector3(code.GetPoints()[1].X, code.GetPoints()[1].Y);
-				var p3 = new Vector3(code.GetPoints()[2].X, code.GetPoints()[2].Y);
-
-				var ab = p2 - p1;
-				var ac = p3 - p1;
-				var bc = p3 - p2;
-
-				Vector3 max = new Vector3(0, 0);
-                
-                //// find the longest line.
-				if (ab.magnitude > ac.magnitude) {
-					max = ab;
-				} else {
-					max = ac;
-				}
-
-				if (bc.magnitude > max.magnitude) {
-					max = bc;
-				}
-
-				Vector3 position = new Vector3(0, 0);
-				if (max == ab || max == ac) {
-					position = p1 + (max / 2);
-				} else {
-					position = p2 + (max / 2);
-				}
-
-                Vector3 start = new Vector3((position.x - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (position.y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
-
-                //TODO: use center instead of just one point for the position.
-                //Vector3 position = new Vector3((code.GetPoints()[0].X - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (code.GetPoints()[0].Y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
-                //code.GetModel().gameObject.transform.localPosition = position;
-                code.GetModel().transform.localPosition = start;
+                code.InterpolatePosition();
 			});
 		}
 	}
