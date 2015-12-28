@@ -108,8 +108,8 @@ public class TextureScript : MonoBehaviour {
 	private class QRCodeData {
 		private ResultPoint[] target;
 		private GameObject model;
-		private bool destroy = false;
         private float time;
+        private float destroyTime = -1;
 
 		public QRCodeData(ResultPoint[] resultPoints, GameObject model) {
 			this.target = resultPoints;
@@ -120,6 +120,7 @@ public class TextureScript : MonoBehaviour {
 		public void Update(ResultPoint[] newResultPoints) {
 			this.target = newResultPoints;
             this.time = Time.time;
+            this.destroyTime = -1;
 		}
 
 		public ResultPoint[] GetPoints() {
@@ -135,11 +136,18 @@ public class TextureScript : MonoBehaviour {
 		}
 
 		public void MarkAsDestroy() {
-			this.destroy = true;
+            if (this.destroyTime < 0) {
+                this.destroyTime = Time.time;
+            }
 		}
 
 		public bool IsMarkedAsDestroy() {
-			return this.destroy;
+            if (this.destroyTime < 0)
+            {
+                return false;
+            }
+
+            return Time.time - this.destroyTime > 0.5f;
 		}
 
 		public override string ToString () {
