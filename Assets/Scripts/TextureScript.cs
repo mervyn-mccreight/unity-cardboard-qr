@@ -220,12 +220,12 @@ public class TextureScript : MonoBehaviour {
                 position = p2 + (max / 2);
             }
 
-            return new Vector3((position.x - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 0, (position.y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
+            return new Vector3((position.x - CAM_WIDTH / 2) / (float)CAM_WIDTH * 1.334f * 10 * -1, 2, (position.y - CAM_HEIGHT / 2) / (float)CAM_HEIGHT * 10);
         }
 
         private Vector3 scaleFactor()
         {
-            return Vector3.one * diagonal().magnitude / 100f;
+            return new Vector3(diagonal().magnitude / 100f, diagonal().magnitude / 100f * 0.05f, diagonal().magnitude / 100f);
         }
 
         public void InterpolatePosition()
@@ -303,10 +303,10 @@ public class TextureScript : MonoBehaviour {
 				// since we can not access Unity-API from non-main threads
 				// we have to create the game object referred by the code later in here.
 				if (code.GetModel() == null) {
-					var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-					cube.transform.SetParent(parent);
-                    cube.transform.localPosition = code.CenterToPlane();
-					code.SetModel(cube);
+                    var coin = Instantiate(Resources.Load("Coin")) as GameObject;
+					coin.transform.SetParent(parent);
+                    coin.transform.localPosition = code.CenterToPlane();
+					code.SetModel(coin);
                     return;
 				}
 
