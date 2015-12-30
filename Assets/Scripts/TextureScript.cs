@@ -111,19 +111,19 @@ public class TextureScript : MonoBehaviour {
 	private class QRCodeData {
 		private ResultPoint[] target;
 		private GameObject model;
-        private float time;
-        private float destroyTime = -1;
+		private DateTime time;
+		private DateTime destroyTime = DateTime.MinValue;
 
 		public QRCodeData(ResultPoint[] resultPoints, GameObject model) {
 			this.target = resultPoints;
 			this.model = model;
-            this.time = Time.time;
+			this.time = DateTime.UtcNow;
 		}
 
 		public void Update(ResultPoint[] newResultPoints) {
 			this.target = newResultPoints;
-            this.time = Time.time;
-            this.destroyTime = -1;
+			this.time = DateTime.UtcNow;
+			this.destroyTime = DateTime.MinValue;
 		}
 
 		public ResultPoint[] GetPoints() {
@@ -139,18 +139,18 @@ public class TextureScript : MonoBehaviour {
 		}
 
 		public void MarkAsDestroy() {
-            if (this.destroyTime < 0) {
-                this.destroyTime = Time.time;
+			if (this.destroyTime == DateTime.MinValue) {
+				this.destroyTime = DateTime.UtcNow;
             }
 		}
 
 		public bool IsMarkedAsDestroy() {
-            if (this.destroyTime < 0)
+			if (this.destroyTime == DateTime.MinValue)
             {
                 return false;
             }
 
-            return Time.time - this.destroyTime > KEEP_ALIVE_TIME;
+			return DateTime.UtcNow.Subtract(this.destroyTime).TotalSeconds > KEEP_ALIVE_TIME;
 		}
 
 		public override string ToString () {
@@ -228,18 +228,18 @@ public class TextureScript : MonoBehaviour {
             return new Vector3(diagonal().magnitude / 100f, diagonal().magnitude / 100f * 0.05f, diagonal().magnitude / 100f);
         }
 
-        public void InterpolatePosition()
+        public void UpdateModel()
         {
-            var start = GetModel().transform.localPosition;
-            var end = CenterToPlane();
-
-            var traveledDistance = (Time.time - this.time) * INTERPOLATION_SPEED;
-            var totalDistance = Vector3.Distance(start, end);
-
-            GetModel().transform.localPosition = Vector3.Lerp(start, end, traveledDistance/totalDistance);
-
-            GetModel().transform.localScale = scaleFactor();
+			GetModel ().transform.localPosition = interpolate (GetModel ().transform.localPosition, CenterToPlane (), this.time, INTERPOLATION_SPEED);
+			GetModel ().transform.localScale = interpolate (GetModel ().transform.localScale, scaleFactor (), this.time, INTERPOLATION_SPEED);
         }
+
+		private Vector3 interpolate(Vector3 from, Vector3 to, DateTime startTime, float speed) {
+			var traveledDistance = ((float)DateTime.UtcNow.Subtract(this.time).TotalSeconds) * INTERPOLATION_SPEED;
+			var totalDistance = Vector3.Distance(from, to);
+
+			return Vector3.Lerp(from, to, traveledDistance/totalDistance);
+		}
     }
 
 	private class QRCodeCollection {
@@ -310,7 +310,7 @@ public class TextureScript : MonoBehaviour {
                     return;
 				}
 
-                code.InterpolatePosition();
+                code.UpdateModel();
 			});
 		}
 	}
