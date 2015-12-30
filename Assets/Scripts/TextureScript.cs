@@ -232,6 +232,7 @@ public class TextureScript : MonoBehaviour {
         {
 			GetModel ().transform.localPosition = interpolate (GetModel ().transform.localPosition, CenterToPlane (), this.time, INTERPOLATION_SPEED);
 			GetModel ().transform.localScale = interpolate (GetModel ().transform.localScale, scaleFactor (), this.time, INTERPOLATION_SPEED);
+			GetModel ().transform.Rotate (Vector3.forward * Time.smoothDeltaTime * 100f);
         }
 
 		private Vector3 interpolate(Vector3 from, Vector3 to, DateTime startTime, float speed) {
