@@ -7,6 +7,7 @@ using ZXing.QrCode.Internal;
 using ZXing.Common;
 using System.Collections.Generic;
 using System;
+using UnityEngine.SceneManagement;
 
 public class TextureScript : MonoBehaviour {
 	public Text uiText;
@@ -261,6 +262,13 @@ public class TextureScript : MonoBehaviour {
 			ResultPoint[] points = result.Points;
 
 			if (data.Count == 0) {
+                // TODO: determine QRCode content.
+                // If question -> load question UI scene
+                // If coin -> check if coin was unlocked, then display coin model (this part is already implemented here)
+
+                // TODO: Debug: assume question.
+                SceneManager.LoadScene(1);
+
 				// null here, since we can not access unity api to create a game object yet.
 				data.Add(new QRCodeData(points, null));
 			} else {

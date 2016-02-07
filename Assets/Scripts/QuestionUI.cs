@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class QuestionUI : MonoBehaviour
 {
@@ -33,5 +34,13 @@ public class QuestionUI : MonoBehaviour
         {
             Debug.Log("Wrong! Score is " + GlobalState.Score);
         }
+
+        StartCoroutine(WaitAndReturnToCamera());
+    }
+
+    IEnumerator WaitAndReturnToCamera()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(0);
     }
 }
