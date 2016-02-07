@@ -246,9 +246,11 @@ public class TextureScript : MonoBehaviour {
 
 	private class QRCodeCollection {
 		private List<QRCodeData> data = new List<QRCodeData>();
+        private Decoder decoder = new Decoder();
+	    private string contentString = "ERROR";
 
-		// call this update in the qr code detection thread.
-		public void UpdateData(DetectorResult result) {
+        // call this update in the qr code detection thread.
+        public void UpdateData(DetectorResult result) {
 			if (result == null) {
 				// if there is no qr-code in the image, clear the area.
 				data.ForEach(delegate(QRCodeData obj) {
@@ -266,8 +268,21 @@ public class TextureScript : MonoBehaviour {
                 // If question -> load question UI scene
                 // If coin -> check if coin was unlocked, then display coin model (this part is already implemented here)
 
-                // TODO: Debug: assume question.
-                SceneManager.LoadScene(1);
+			    DecoderResult decoderResult = this.decoder.decode(result.Bits, null);
+			    if (decoderResult != null)
+			    {
+                    // TODO: convert QR code content to object to check type (question or coin)
+                    contentString = decoderResult.Text;
+
+			        if (contentString == "Hello :)") // QR code for testing: http://cdnqrcgde.s3-eu-west-1.amazonaws.com/wp-content/uploads/2013/11/jpeg.jpg
+                    {
+                        SceneManager.LoadScene(1);
+                    }
+                }
+			    else
+			    {
+			        contentString = "ERROR";
+			    }
 
 				// null here, since we can not access unity api to create a game object yet.
 				data.Add(new QRCodeData(points, null));
@@ -287,6 +302,7 @@ public class TextureScript : MonoBehaviour {
 			string result = "[" + System.Environment.NewLine;
 			result = result + string.Join (",", this.data.ConvertAll (x => x.ToString ()).ToArray ());
 			result = result + "]";
+		    result = result + "\n" + contentString;
 			return result;
 		}
 
