@@ -278,6 +278,7 @@ public class TextureScript : MonoBehaviour {
                     {
                         SceneManager.LoadScene(1);
                     }
+                    // TODO: check if corresponding coin is already unlocked and inform the user (Toast)
                 }
 			    else
 			    {
