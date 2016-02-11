@@ -7,15 +7,23 @@ namespace Assets.Scripts
 
         public static Question CurrentQuestion { get; set; }
 
-        public static int Score { get; set; }
+        public static int CurrentCoin { get; set; }
 
-        public static List<int> UnlockedCoins
+        public static HashSet<int> UnlockedCoins
         {
             get { return _unlockedCoins; }
             set { _unlockedCoins = value; }
         }
 
-        private static List<int> _unlockedCoins = new List<int>();
+        public static HashSet<int> CollectedCoins
+        {
+            get { return _collectedCoins; }
+            set { _collectedCoins = value; }
+        }
+
+        private static HashSet<int> _unlockedCoins = new HashSet<int>();
+
+        private static HashSet<int> _collectedCoins = new HashSet<int>();
 
         // TODO: can the app know how many coins there are?
         // What happens when the user collected them all?

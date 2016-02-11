@@ -26,8 +26,11 @@ namespace Assets.Scripts
         private static float KEEP_ALIVE_TIME = 0.5f;
         private static float INTERPOLATION_SPEED = 2f;
 
+        private AudioSource coin;
+
         // Use this for initialization
         void Start () {
+            coin = GetComponent<AudioSource>();
 
             Application.RequestUserAuthorization(UserAuthorization.WebCam);
             if (Application.HasUserAuthorization(UserAuthorization.WebCam)) {
@@ -35,6 +38,7 @@ namespace Assets.Scripts
                 Debug.Log("#WebCamDevices: " + WebCamTexture.devices.GetLength(0).ToString());
 
                 foreach (WebCamDevice device in WebCamTexture.devices) {
+                    Debug.Log("WebCamDevice: " + device.name);
                     Debug.Log("WebCamDevice: " + device.name);
                     Debug.Log("FrontFacing? " + device.isFrontFacing);
                     if (!device.isFrontFacing) {
@@ -78,6 +82,19 @@ namespace Assets.Scripts
 	
         // Update is called once per frame
         void Update () {
+            if (Input.touchCount > 0)
+            {
+                if (GlobalState.CurrentCoin >= 0)
+                {
+                    if (!GlobalState.CollectedCoins.Contains(GlobalState.CurrentCoin))
+                    {
+                        GlobalState.CollectedCoins.Add(GlobalState.CurrentCoin);
+                        coin.Play();
+                        qrCodeCollection.DestroyDataObject(GlobalState.CurrentCoin);
+                    }
+                }
+            }
+
             // destroy data which is marked as to be destroyed from the thread.
             this.qrCodeCollection.DestroyMarkedOnUpdate ();
 
@@ -113,12 +130,15 @@ namespace Assets.Scripts
         private class QRCodeData {
             private ResultPoint[] target;
             private GameObject model;
+            public int Id { get; private set; }
             private DateTime time;
             private DateTime destroyTime = DateTime.MinValue;
+            private bool forceDestroy;
 
-            public QRCodeData(ResultPoint[] resultPoints, GameObject model) {
+            public QRCodeData(ResultPoint[] resultPoints, GameObject model, int id) {
                 this.target = resultPoints;
                 this.model = model;
+                Id = id;
                 this.time = DateTime.UtcNow;
             }
 
@@ -140,6 +160,11 @@ namespace Assets.Scripts
                 return this.model;
             }
 
+            public void ForceMarkAsDestroy()
+            {
+                this.forceDestroy = true;
+            }
+
             public void MarkAsDestroy() {
                 if (this.destroyTime == DateTime.MinValue) {
                     this.destroyTime = DateTime.UtcNow;
@@ -147,6 +172,11 @@ namespace Assets.Scripts
             }
 
             public bool IsMarkedAsDestroy() {
+                if (forceDestroy)
+                {
+                    return true;
+                }
+
                 if (this.destroyTime == DateTime.MinValue)
                 {
                     return false;
@@ -292,8 +322,11 @@ namespace Assets.Scripts
                         {
                             if (GlobalState.UnlockedCoins.Contains(dataFromJson.id))
                             {
-                                // null here, since we can not access unity api to create a game object yet.
-                                data.Add(new QRCodeData(points, null));
+                                if (!GlobalState.CollectedCoins.Contains(dataFromJson.id))
+                                {
+                                    // null here, since we can not access unity api to create a game object yet.
+                                    data.Add(new QRCodeData(points, null, dataFromJson.id));
+                                }
                             }
                             else
                             {
@@ -315,7 +348,7 @@ namespace Assets.Scripts
 
             public override string ToString () {
                 if (data.Count == 0) {
-                    return "[]";
+                    return "[]" + "\n" + contentString;
                 }
 
                 string result = "[" + System.Environment.NewLine;
@@ -325,16 +358,28 @@ namespace Assets.Scripts
                 return result;
             }
 
+            public void DestroyDataObject(int id)
+            {
+                this.data.ForEach(delegate (QRCodeData obj)
+                {
+                    if (obj.Id == id)
+                    {
+                        obj.ForceMarkAsDestroy();
+                    }
+                });
+            }
+
             // Destroy the marked objects.
             // Call this only from the Unity mainthread.
             public void DestroyMarkedOnUpdate() {
                 this.data.ForEach (delegate(QRCodeData obj) {
-                                                                if (obj.IsMarkedAsDestroy()) {
-                                                                    if (obj.GetModel() == null) {
-                                                                        return;
-                                                                    }
-                                                                    Destroy (obj.GetModel());
-                                                                }
+                    if (obj.IsMarkedAsDestroy()) {
+                        GlobalState.CurrentCoin = -1;
+                        if (obj.GetModel() == null) {
+                            return;
+                        }
+                        Destroy (obj.GetModel());
+                    }
                 });
 
                 this.data.RemoveAll (item => item.IsMarkedAsDestroy ());
@@ -344,17 +389,17 @@ namespace Assets.Scripts
             public void Update(Transform parent) {
                 this.data.ForEach (delegate(QRCodeData code) {
 
-                                                                 // since we can not access Unity-API from non-main threads
-                                                                 // we have to create the game object referred by the code later in here.
-                                                                 if (code.GetModel() == null) {
-                                                                     var coin = Instantiate(Resources.Load("Coin")) as GameObject;
-                                                                     coin.transform.SetParent(parent);
-                                                                     coin.transform.localPosition = code.CenterToPlane();
-                                                                     code.SetModel(coin);
-                                                                     return;
-                                                                 }
+                    // since we can not access Unity-API from non-main threads
+                    // we have to create the game object referred by the code later in here.
+                    if (code.GetModel() == null) {
+                        var coin = Instantiate(Resources.Load("Coin")) as GameObject;
+                        coin.transform.SetParent(parent);
+                        coin.transform.localPosition = code.CenterToPlane();
+                        code.SetModel(coin);
+                        return;
+                    }
 
-                                                                 code.UpdateModel();
+                    code.UpdateModel();
                 });
             }
         }
