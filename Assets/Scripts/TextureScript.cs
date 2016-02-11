@@ -274,21 +274,37 @@ namespace Assets.Scripts
                     {
                         contentString = decoderResult.Text;
                         Data dataFromJson = JsonUtility.FromJson<Data>(contentString);
-                        
+
                         if (dataFromJson.type == DataType.Question)
                         {
-                            GlobalState.CurrentQuestion = dataFromJson.ToQuestion();
-                            SceneManager.LoadScene(1);
+                            // TODO: check if corresponding coin is already unlocked and inform the user (Toast)
+                            if (!GlobalState.UnlockedCoins.Contains(dataFromJson.id))
+                            {
+                                GlobalState.CurrentQuestion = dataFromJson.ToQuestion();
+                                SceneManager.LoadScene(1);
+                            }
+                            else
+                            {
+                                contentString = "Already unlocked!";
+                            }
                         }
-                        // TODO: check if corresponding coin is already unlocked and inform the user (Toast)
+                        else if (dataFromJson.type == DataType.Coin)
+                        {
+                            if (GlobalState.UnlockedCoins.Contains(dataFromJson.id))
+                            {
+                                // null here, since we can not access unity api to create a game object yet.
+                                data.Add(new QRCodeData(points, null));
+                            }
+                            else
+                            {
+                                contentString = "Answer the question first!";
+                            }
+                        }
                     }
                     else
                     {
                         contentString = "ERROR";
                     }
-
-                    // null here, since we can not access unity api to create a game object yet.
-                    data.Add(new QRCodeData(points, null));
                 } else {
                     // @TODO: Apply more logic here, lol.
                     var enumerator = data.GetEnumerator();

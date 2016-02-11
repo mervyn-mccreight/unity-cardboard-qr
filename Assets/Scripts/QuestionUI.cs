@@ -30,6 +30,7 @@ namespace Assets.Scripts
             if (this.question != null && this.question.CorrectAnswer == answerIndex)
             {
                 GlobalState.Score += 1;
+                GlobalState.UnlockedCoins.Add(question.Id);
                 Debug.Log("Correct! Score is " + GlobalState.Score);
             }
             else
