@@ -12,8 +12,8 @@ namespace Assets.Scripts
         public void Start()
         {
             // TODO: debug question
-            string[] answers = { "Ich", "Du", "Deine Mama", "Keiner" };
-            GlobalState.CurrentQuestion = new Question(0, "Hier steht auch manchmal eine sehr lange Frage, aber auch das sollte gehen. Das war jetzt eher ein Satz, deshalb: Wer ist der King?", answers, 2);
+            //string[] answers = { "Ich", "Du", "Deine Mama", "Keiner" };
+            //GlobalState.CurrentQuestion = new Question(0, "Hier steht auch manchmal eine sehr lange Frage, aber auch das sollte gehen. Das war jetzt eher ein Satz, deshalb: Wer ist der King?", answers, 2);
 
             this.question = GlobalState.CurrentQuestion;
 

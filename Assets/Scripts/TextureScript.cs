@@ -255,8 +255,8 @@ namespace Assets.Scripts
                 if (result == null) {
                     // if there is no qr-code in the image, clear the area.
                     data.ForEach(delegate(QRCodeData obj) {
-                                                              // mark destroy all models attached to qrcodedata before cleaning the list.
-                                                              obj.MarkAsDestroy();
+                        // mark destroy all models attached to qrcodedata before cleaning the list.
+                        obj.MarkAsDestroy();
                     });
 
                     return;
@@ -272,11 +272,12 @@ namespace Assets.Scripts
                     DecoderResult decoderResult = this.decoder.decode(result.Bits, null);
                     if (decoderResult != null)
                     {
-                        // TODO: convert QR code content to object to check type (question or coin)
                         contentString = decoderResult.Text;
-
-                        if (contentString == "Hello :)") // QR code for testing: http://cdnqrcgde.s3-eu-west-1.amazonaws.com/wp-content/uploads/2013/11/jpeg.jpg
+                        Data dataFromJson = JsonUtility.FromJson<Data>(contentString);
+                        
+                        if (dataFromJson.type == DataType.Question)
                         {
+                            GlobalState.CurrentQuestion = dataFromJson.ToQuestion();
                             SceneManager.LoadScene(1);
                         }
                         // TODO: check if corresponding coin is already unlocked and inform the user (Toast)
