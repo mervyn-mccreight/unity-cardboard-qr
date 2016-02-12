@@ -38,7 +38,7 @@ namespace Assets.Scripts
         IEnumerator WaitAndReturnToCamera()
         {
             yield return new WaitForSeconds(0.5f);
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene("CameraScene");
         }
     }
 }

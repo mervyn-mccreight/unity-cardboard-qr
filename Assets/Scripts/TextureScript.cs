@@ -311,7 +311,7 @@ namespace Assets.Scripts
                             if (!GlobalState.UnlockedCoins.Contains(dataFromJson.id))
                             {
                                 GlobalState.CurrentQuestion = dataFromJson.ToQuestion();
-                                SceneManager.LoadScene(1);
+                                SceneManager.LoadScene("QuestionScene");
                             }
                             else
                             {
