@@ -15,7 +15,7 @@ namespace Assets.Scripts
             //string[] answers = { "Ich", "Du", "Deine Mama", "Keiner" };
             //GlobalState.CurrentQuestion = new Question(0, "Hier steht auch manchmal eine sehr lange Frage, aber auch das sollte gehen. Das war jetzt eher ein Satz, deshalb: Wer ist der King?", answers, 2);
 
-            this.question = GlobalState.CurrentQuestion;
+            this.question = GlobalState.Instance.CurrentQuestion;
 
             // init UI
             GameObject.Find("QuestionText").GetComponent<Text>().text = this.question.Text;
@@ -37,7 +37,7 @@ namespace Assets.Scripts
         {
             if (this.question != null && this.question.CorrectAnswer == answerIndex)
             {
-                GlobalState.UnlockedCoins.Add(question.Id);
+                GlobalState.Instance.UnlockedCoins.Add(question.Id);
             }
 
             StartCoroutine(WaitAndReturnToCamera());

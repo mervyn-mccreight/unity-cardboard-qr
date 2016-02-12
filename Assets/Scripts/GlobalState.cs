@@ -1,35 +1,51 @@
 ﻿
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class GlobalState {
+	public class GlobalState : MonoBehaviour {
+		private static GlobalState _instance;
 
-        public static Question CurrentQuestion { get; set; }
+		public static GlobalState Instance {
+			get 
+			{
+				if (_instance == null) {
+					_instance = new GameObject ("GlobalState").AddComponent<GlobalState>();
+				}
+				return _instance;
+			}
+		}
 
-        public static int CurrentCoin
+		public void OnApplicationQuit() {
+			_instance = null;
+		}
+
+        public Question CurrentQuestion { get; set; }
+
+        public int CurrentCoin
         {
             get { return _currentCoin; }
             set { _currentCoin = value; }
         }
 
-        public static HashSet<int> UnlockedCoins
+        public HashSet<int> UnlockedCoins
         {
             get { return _unlockedCoins; }
             set { _unlockedCoins = value; }
         }
 
-        public static HashSet<int> CollectedCoins
+        public HashSet<int> CollectedCoins
         {
             get { return _collectedCoins; }
             set { _collectedCoins = value; }
         }
 
-        private static HashSet<int> _unlockedCoins = new HashSet<int>();
-        private static HashSet<int> _collectedCoins = new HashSet<int>();
-        private static int _currentCoin = -1;
+        private HashSet<int> _unlockedCoins = new HashSet<int>();
+        private HashSet<int> _collectedCoins = new HashSet<int>();
+        private int _currentCoin = -1;
 
-        public static void Reset()
+        public void Reset()
         {
             CurrentCoin = -1;
             CurrentQuestion = null;

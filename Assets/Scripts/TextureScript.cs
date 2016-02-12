@@ -44,7 +44,7 @@ namespace Assets.Scripts
             coin = GetComponent<AudioSource>();
 
             qrCodeCollection = new QRCodeCollection();
-            GlobalState.Reset();
+            GlobalState.Instance.Reset();
 
             Application.RequestUserAuthorization(UserAuthorization.WebCam);
             if (Application.HasUserAuthorization(UserAuthorization.WebCam)) {
@@ -98,13 +98,13 @@ namespace Assets.Scripts
         void Update () {
             if (Input.touchCount > 0)
             {
-                if (GlobalState.CurrentCoin >= 0)
+                if (GlobalState.Instance.CurrentCoin >= 0)
                 {
-                    if (!GlobalState.CollectedCoins.Contains(GlobalState.CurrentCoin))
+                    if (!GlobalState.Instance.CollectedCoins.Contains(GlobalState.Instance.CurrentCoin))
                     {
-                        GlobalState.CollectedCoins.Add(GlobalState.CurrentCoin);
+                        GlobalState.Instance.CollectedCoins.Add(GlobalState.Instance.CurrentCoin);
                         coin.Play();
-                        qrCodeCollection.DestroyDataObject(GlobalState.CurrentCoin);
+                        qrCodeCollection.DestroyDataObject(GlobalState.Instance.CurrentCoin);
                     }
                 }
             }
@@ -345,9 +345,9 @@ namespace Assets.Scripts
                         if (dataFromJson.type == DataType.Question)
                         {
                             // TODO: check if corresponding coin is already unlocked and inform the user (Toast)
-                            if (!GlobalState.UnlockedCoins.Contains(dataFromJson.id))
+                            if (!GlobalState.Instance.UnlockedCoins.Contains(dataFromJson.id))
                             {
-                                GlobalState.CurrentQuestion = dataFromJson.ToQuestion();
+                                GlobalState.Instance.CurrentQuestion = dataFromJson.ToQuestion();
                                 SceneManager.LoadScene(Config.QuestionScene);
                             }
                             else
@@ -357,11 +357,11 @@ namespace Assets.Scripts
                         }
                         else if (dataFromJson.type == DataType.Coin)
                         {
-                            if (GlobalState.UnlockedCoins.Contains(dataFromJson.id))
+                            if (GlobalState.Instance.UnlockedCoins.Contains(dataFromJson.id))
                             {
-                                if (!GlobalState.CollectedCoins.Contains(dataFromJson.id))
+                                if (!GlobalState.Instance.CollectedCoins.Contains(dataFromJson.id))
                                 {
-                                    GlobalState.CurrentCoin = dataFromJson.id;
+                                    GlobalState.Instance.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
                                     data.Add(new QRCodeData(points, null, dataFromJson.id));
                                 }
@@ -412,7 +412,7 @@ namespace Assets.Scripts
             public void DestroyMarkedOnUpdate() {
                 this.data.ForEach (delegate(QRCodeData obj) {
                     if (obj.IsMarkedAsDestroy()) {
-                        GlobalState.CurrentCoin = -1;
+                        GlobalState.Instance.CurrentCoin = -1;
                         if (obj.GetModel() == null) {
                             return;
                         }
