@@ -1,27 +1,45 @@
 ﻿
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Assets.Scripts
 {
-	public class GlobalState : MonoBehaviour {
+	[Serializable]
+	public class GlobalState {
 		private static GlobalState _instance;
 
 		public static GlobalState Instance {
 			get 
 			{
 				if (_instance == null) {
-					_instance = new GameObject ("GlobalState").AddComponent<GlobalState>();
+					if (File.Exists(Application.persistentDataPath + "/globalState.dat")) {
+						var bf = new BinaryFormatter ();
+						var loadFrom = File.Open(Application.persistentDataPath + "/globalState.dat", FileMode.Open);
+						_instance = (GlobalState) bf.Deserialize(loadFrom);
+						loadFrom.Close ();
+						Debug.Log ("Loaded persisted GlobalState");
+					} else {
+						_instance = new GlobalState ();
+					}
 				}
 				return _instance;
 			}
 		}
 
-		public void OnApplicationQuit() {
-			_instance = null;
+		public static void Save() {
+			var bf = new BinaryFormatter ();
+			var saveTo = File.Create (Application.persistentDataPath + "/globalState.dat");
+			bf.Serialize (saveTo , GlobalState.Instance);
+			saveTo.Close ();
 		}
 
-        public Question CurrentQuestion { get; set; }
+        public Question CurrentQuestion { 
+			get { return _currentQuestion; } 
+			set { _currentQuestion = value; } 
+		}
 
         public int CurrentCoin
         {
@@ -29,21 +47,26 @@ namespace Assets.Scripts
             set { _currentCoin = value; }
         }
 
-        public HashSet<int> UnlockedCoins
+        public List<int> UnlockedCoins
         {
             get { return _unlockedCoins; }
             set { _unlockedCoins = value; }
         }
 
-        public HashSet<int> CollectedCoins
+        public List<int> CollectedCoins
         {
             get { return _collectedCoins; }
             set { _collectedCoins = value; }
         }
+			
+        private List<int> _unlockedCoins = new List<int>();
+        private List<int> _collectedCoins = new List<int>();
 
-        private HashSet<int> _unlockedCoins = new HashSet<int>();
-        private HashSet<int> _collectedCoins = new HashSet<int>();
+		[NonSerialized]
         private int _currentCoin = -1;
+
+		[NonSerialized]
+		private Question _currentQuestion = null;
 
         public void Reset()
         {

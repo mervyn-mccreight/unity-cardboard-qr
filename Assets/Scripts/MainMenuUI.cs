@@ -4,13 +4,14 @@ using System.Collections;
 using Assets.Scripts;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class MainMenuUI : MonoBehaviour
 {
     // Use this for initialization
 	IEnumerator Start () {
 		// do not destroy this instance on scene changes.
-		DontDestroyOnLoad(GlobalState.Instance);
 
         var www = new WWW(Config.ApiUrlQuestionCount);
 
@@ -25,7 +26,7 @@ public class MainMenuUI : MonoBehaviour
 	void Update () {
 	    if (Input.GetKeyDown(KeyCode.Escape))
 	    {
-			Debug.Log(JsonUtility.ToJson(GlobalState.Instance));
+			GlobalState.Save ();
             Application.Quit();
         }
     }
