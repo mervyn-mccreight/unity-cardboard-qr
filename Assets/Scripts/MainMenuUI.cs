@@ -7,12 +7,9 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-    // TODO: FH Wedel server URL
-    private const string Url = "http://192.168.1.30/cardboard-qr-questionform/api.php?action=get_question_count";
-
     // Use this for initialization
 	IEnumerator Start () {
-        var www = new WWW(Url);
+        var www = new WWW(Config.ApiUrlQuestionCount);
 
         // Wait for download to complete
         yield return www;
