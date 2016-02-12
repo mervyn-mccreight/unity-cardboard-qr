@@ -111,7 +111,7 @@ namespace Assets.Scripts
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                SceneManager.LoadScene("MainMenuScene");
+                SceneManager.LoadScene(Config.MainMenuScene);
             }
 
 
@@ -348,7 +348,7 @@ namespace Assets.Scripts
                             if (!GlobalState.UnlockedCoins.Contains(dataFromJson.id))
                             {
                                 GlobalState.CurrentQuestion = dataFromJson.ToQuestion();
-                                SceneManager.LoadScene("QuestionScene");
+                                SceneManager.LoadScene(Config.QuestionScene);
                             }
                             else
                             {

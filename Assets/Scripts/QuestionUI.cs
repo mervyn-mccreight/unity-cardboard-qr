@@ -29,7 +29,7 @@ namespace Assets.Scripts
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                SceneManager.LoadScene("CameraScene");
+                SceneManager.LoadScene(Config.CameraScene);
             }
         }
 
@@ -46,7 +46,7 @@ namespace Assets.Scripts
         IEnumerator WaitAndReturnToCamera()
         {
             yield return new WaitForSeconds(0.5f);
-            SceneManager.LoadScene("CameraScene");
+            SceneManager.LoadScene(Config.CameraScene);
         }
     }
 }

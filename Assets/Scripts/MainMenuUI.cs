@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class MainMenuUI : MonoBehaviour
 {
-
     // TODO: FH Wedel server URL
     private const string Url = "http://192.168.1.30/cardboard-qr-questionform/api.php?action=get_question_count";
 
@@ -30,9 +29,8 @@ public class MainMenuUI : MonoBehaviour
         }
     }
 
-    public void OnGoClick()
-    {
-        SceneManager.LoadScene("CameraScene");
+    public void OnGoClick() {
+        SceneManager.LoadScene(Config.CameraScene);
     }
 
     public void OnHelpClick()
