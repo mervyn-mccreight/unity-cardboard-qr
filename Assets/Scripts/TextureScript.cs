@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +16,8 @@ namespace Assets.Scripts
 {
     public class TextureScript : MonoBehaviour {
         public Text uiText;
+        public GameObject Toast;
+        public const float ToastLength = 2.0f;
 
         private WebCamTexture webcamTexture;
         private WebCamDevice backFacing;
@@ -26,10 +32,15 @@ namespace Assets.Scripts
         private static float KEEP_ALIVE_TIME = 0.5f;
         private static float INTERPOLATION_SPEED = 2f;
 
+        public static TextureScript TextureScriptInstance;
+
         private AudioSource coin;
 
         // Use this for initialization
-        void Start() {
+        void Start()
+        {
+            TextureScriptInstance = this;
+
             coin = GetComponent<AudioSource>();
 
             qrCodeCollection = new QRCodeCollection();
@@ -134,6 +145,22 @@ namespace Assets.Scripts
             Debug.Log("CameraScene OnDestroy!");
             qrCodeThread.Abort();
             webcamTexture.Stop();
+        }
+
+        public void ShowToast(string message, float delay)
+        {
+            if (!Toast.activeInHierarchy)
+            {
+                Toast.GetComponentInChildren<Text>().text = message;
+                Toast.SetActive(true);
+                StartCoroutine(HideToast(delay));
+            }
+        }
+
+        private IEnumerator HideToast(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            Toast.SetActive(false);
         }
 
         // Class for Mapping QR-Code Data to a Unity GameObject.
@@ -325,7 +352,7 @@ namespace Assets.Scripts
                             }
                             else
                             {
-                                contentString = "Already unlocked!";
+                                TextureScriptInstance.ShowToast("Already unlocked!", ToastLength);
                             }
                         }
                         else if (dataFromJson.type == DataType.Coin)
@@ -341,7 +368,7 @@ namespace Assets.Scripts
                             }
                             else
                             {
-                                contentString = "Answer the question first!";
+                                TextureScriptInstance.ShowToast("Answer the question first!", ToastLength);
                             }
                         }
                     }
