@@ -17,7 +17,7 @@ namespace Assets.Scripts
         private WebCamDevice backFacing;
         private Thread qrCodeThread;
         private bool runThread = true;
-        private QRCodeCollection qrCodeCollection = new QRCodeCollection();
+        private QRCodeCollection qrCodeCollection;
 
         private Color32[] pixels = null;
         private static int CAM_WIDTH = 1024;
@@ -29,8 +29,11 @@ namespace Assets.Scripts
         private AudioSource coin;
 
         // Use this for initialization
-        void Start () {
+        void Start() {
             coin = GetComponent<AudioSource>();
+
+            qrCodeCollection = new QRCodeCollection();
+            GlobalState.Reset();
 
             Application.RequestUserAuthorization(UserAuthorization.WebCam);
             if (Application.HasUserAuthorization(UserAuthorization.WebCam)) {
@@ -95,6 +98,12 @@ namespace Assets.Scripts
                 }
             }
 
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("MainMenuScene");
+            }
+
+
             // destroy data which is marked as to be destroyed from the thread.
             this.qrCodeCollection.DestroyMarkedOnUpdate ();
 
@@ -122,6 +131,7 @@ namespace Assets.Scripts
 
         // This function is called when the MonoBehaviour will be destroyed.
         void OnDestroy() {
+            Debug.Log("CameraScene OnDestroy!");
             qrCodeThread.Abort();
             webcamTexture.Stop();
         }
@@ -324,6 +334,7 @@ namespace Assets.Scripts
                             {
                                 if (!GlobalState.CollectedCoins.Contains(dataFromJson.id))
                                 {
+                                    GlobalState.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
                                     data.Add(new QRCodeData(points, null, dataFromJson.id));
                                 }

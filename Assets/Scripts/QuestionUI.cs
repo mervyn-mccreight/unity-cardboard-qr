@@ -25,6 +25,14 @@ namespace Assets.Scripts
             GameObject.Find("Answer4Button").GetComponentInChildren<Text>().text = this.question.Answers[3];
         }
 
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("CameraScene");
+            }
+        }
+
         public void OnAnswerClick(int answerIndex)
         {
             if (this.question != null && this.question.CorrectAnswer == answerIndex)
