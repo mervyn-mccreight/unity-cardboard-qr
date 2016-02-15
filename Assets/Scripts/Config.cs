@@ -13,10 +13,10 @@ namespace Assets.Scripts
         // TODO: FH Wedel server URL
         // tim
         public const string ApiUrlQuestionCount =
-            "http://192.168.1.30/cardboard-qr-questionform/api.php?action=get_question_count";
+            "http://192.168.1.30/cardboard-qr-questionform/api.php/questioncount";
 
         // mervyn
-        //		public const string ApiUrlQuestionCount = "http://192.168.178.32/cardboard-qr-marker-frontend/api.php?action=get_question_count";
+        //		public const string ApiUrlQuestionCount = "http://192.168.178.32/cardboard-qr-marker-frontend/api.php/questioncount";
 
         // storage
         public static readonly string StatePath = Application.persistentDataPath + "/globalState.dat";
