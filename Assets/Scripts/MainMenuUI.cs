@@ -26,7 +26,7 @@ public class MainMenuUI : MonoBehaviour
 	void Update () {
 	    if (Input.GetKeyDown(KeyCode.Escape))
 	    {
-			GlobalState.Save ();
+			GlobalState.Save();
             Application.Quit();
         }
     }

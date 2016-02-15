@@ -14,10 +14,11 @@ namespace Assets.Scripts
 		public static GlobalState Instance {
 			get 
 			{
-				if (_instance == null) {
-					if (File.Exists(Application.persistentDataPath + "/globalState.dat")) {
+                Debug.Log(Application.persistentDataPath);
+                if (_instance == null) {
+                    if (File.Exists(Config.StatePath) && new FileInfo(Config.StatePath).Length > 0) {
 						var bf = new BinaryFormatter ();
-						var loadFrom = File.Open(Application.persistentDataPath + "/globalState.dat", FileMode.Open);
+						var loadFrom = File.Open(Config.StatePath, FileMode.Open);
 						_instance = (GlobalState) bf.Deserialize(loadFrom);
 						loadFrom.Close ();
 						Debug.Log ("Loaded persisted GlobalState");
@@ -29,10 +30,12 @@ namespace Assets.Scripts
 			}
 		}
 
-		public static void Save() {
-			var bf = new BinaryFormatter ();
-			var saveTo = File.Create (Application.persistentDataPath + "/globalState.dat");
-			bf.Serialize (saveTo , GlobalState.Instance);
+		public static void Save()
+		{
+		    var state = GlobalState.Instance;
+            var bf = new BinaryFormatter ();
+			var saveTo = File.Create (Config.StatePath);
+			bf.Serialize (saveTo , state);
 			saveTo.Close ();
 		}
 
