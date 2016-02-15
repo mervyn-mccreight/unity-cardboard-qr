@@ -18,8 +18,8 @@ public class MainMenuUI : MonoBehaviour
         // Wait for download to complete
         yield return www;
 
-        GameObject.Find("QuestionProgressText").GetComponent<Text>().text = string.Format("Fragen: {0}/{1}", GlobalState.Instance.UnlockedCoins.Count, www.text);
-        GameObject.Find("CoinProgressText").GetComponent<Text>().text = string.Format("Münzen: {0}/{1}", GlobalState.Instance.CollectedCoins.Count, www.text);
+        GameObject.Find("QuestionProgressText").GetComponent<Text>().text = string.Format("Fragen: {0}/{1}", GlobalState.Instance.UnlockedCoinCount(), www.text);
+        GameObject.Find("CoinProgressText").GetComponent<Text>().text = string.Format("Münzen: {0}/{1}", GlobalState.Instance.CollectedCoinCount(), www.text);
     }
 	
 	// Update is called once per frame

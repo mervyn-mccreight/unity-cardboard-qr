@@ -37,9 +37,7 @@ namespace Assets.Scripts
         {
             if (this.question != null && this.question.CorrectAnswer == answerIndex)
             {
-				if (!GlobalState.Instance.UnlockedCoins.Contains (question.Id)) {
-					GlobalState.Instance.UnlockedCoins.Add(question.Id);
-				}
+				GlobalState.Instance.UnlockCoin();
             }
 
             StartCoroutine(WaitAndReturnToCamera());

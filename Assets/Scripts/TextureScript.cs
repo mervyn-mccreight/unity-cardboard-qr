@@ -100,9 +100,8 @@ namespace Assets.Scripts
             {
                 if (GlobalState.Instance.CurrentCoin >= 0)
                 {
-                    if (!GlobalState.Instance.CollectedCoins.Contains(GlobalState.Instance.CurrentCoin))
+                    if (GlobalState.Instance.CollectCoin())
                     {
-                        GlobalState.Instance.CollectedCoins.Add(GlobalState.Instance.CurrentCoin);
                         coin.Play();
                         qrCodeCollection.DestroyDataObject(GlobalState.Instance.CurrentCoin);
                     }
@@ -332,10 +331,6 @@ namespace Assets.Scripts
                 ResultPoint[] points = result.Points;
 
                 if (data.Count == 0) {
-                    // TODO: determine QRCode content.
-                    // If question -> load question UI scene
-                    // If coin -> check if coin was unlocked, then display coin model (this part is already implemented here)
-
                     DecoderResult decoderResult = this.decoder.decode(result.Bits, null);
                     if (decoderResult != null)
                     {
@@ -345,7 +340,7 @@ namespace Assets.Scripts
                         if (dataFromJson.type == DataType.Question)
                         {
                             // TODO: check if corresponding coin is already unlocked and inform the user (Toast)
-                            if (!GlobalState.Instance.UnlockedCoins.Contains(dataFromJson.id))
+                            if (!GlobalState.Instance.IsCoinUnlocked(dataFromJson.id))
                             {
                                 GlobalState.Instance.CurrentQuestion = dataFromJson.ToQuestion();
                                 SceneManager.LoadScene(Config.QuestionScene);
@@ -357,9 +352,9 @@ namespace Assets.Scripts
                         }
                         else if (dataFromJson.type == DataType.Coin)
                         {
-                            if (GlobalState.Instance.UnlockedCoins.Contains(dataFromJson.id))
+                            if (GlobalState.Instance.IsCoinUnlocked(dataFromJson.id))
                             {
-                                if (!GlobalState.Instance.CollectedCoins.Contains(dataFromJson.id))
+                                if (!GlobalState.Instance.IsCoinCollected(dataFromJson.id))
                                 {
                                     GlobalState.Instance.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
@@ -377,10 +372,12 @@ namespace Assets.Scripts
                         contentString = "ERROR";
                     }
                 } else {
-                    // @TODO: Apply more logic here, lol.
                     var enumerator = data.GetEnumerator();
                     enumerator.MoveNext();
-                    enumerator.Current.Update(points);
+                    if (enumerator.Current != null)
+                    {
+                        enumerator.Current.Update(points);
+                    }
                 }
             }
 

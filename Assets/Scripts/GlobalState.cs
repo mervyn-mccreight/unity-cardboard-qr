@@ -32,7 +32,7 @@ namespace Assets.Scripts
 
 		public static void Save()
 		{
-		    var state = GlobalState.Instance;
+		    var state = Instance;
             var bf = new BinaryFormatter ();
 			var saveTo = File.Create (Config.StatePath);
 			bf.Serialize (saveTo , state);
@@ -50,26 +50,52 @@ namespace Assets.Scripts
             set { _currentCoin = value; }
         }
 
-        public List<int> UnlockedCoins
+        private readonly List<int> _unlockedCoins = new List<int>();
+        private readonly List<int> _collectedCoins = new List<int>();
+
+	    public bool IsCoinUnlocked(int id)
+	    {
+	        return _unlockedCoins.Contains(id);
+	    }
+
+        public bool IsCoinCollected(int id)
         {
-            get { return _unlockedCoins; }
-            set { _unlockedCoins = value; }
+            return _collectedCoins.Contains(id);
         }
 
-        public List<int> CollectedCoins
-        {
-            get { return _collectedCoins; }
-            set { _collectedCoins = value; }
-        }
-			
-        private List<int> _unlockedCoins = new List<int>();
-        private List<int> _collectedCoins = new List<int>();
+        public void UnlockCoin()
+	    {
+	        if (CurrentQuestion != null && !_unlockedCoins.Contains(CurrentQuestion.Id))
+	        {
+	            _unlockedCoins.Add(CurrentQuestion.Id);
+	        }
+	    }
 
-		[NonSerialized]
+	    public bool CollectCoin()
+	    {
+	        if (CurrentCoin >= 0 && !_collectedCoins.Contains(CurrentCoin))
+	        {
+                _collectedCoins.Add(CurrentCoin);
+	            return true;
+	        }
+	        return false;
+	    }
+
+	    public int CollectedCoinCount()
+	    {
+	        return _collectedCoins.Count;
+	    }
+
+        public int UnlockedCoinCount()
+        {
+            return _unlockedCoins.Count;
+        }
+
+        [NonSerialized]
         private int _currentCoin = -1;
 
 		[NonSerialized]
-		private Question _currentQuestion = null;
+		private Question _currentQuestion;
 
         public void Reset()
         {
