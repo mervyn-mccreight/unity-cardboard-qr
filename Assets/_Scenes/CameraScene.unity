@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da752a80e7152e949bb3d43d3983ad6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiText: {fileID: 1528344968}
+  UiText: {fileID: 1528344968}
   Toast: {fileID: 597823162}
 --- !u!82 &278128213
 AudioSource:
