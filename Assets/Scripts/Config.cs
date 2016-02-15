@@ -20,5 +20,9 @@ namespace Assets.Scripts
 
         // storage
         public static readonly string StatePath = Application.persistentDataPath + "/globalState.dat";
+
+        // camera
+        public const int CamWidth = 1024;
+        public const int CamHeight = 768;
     }
 }
