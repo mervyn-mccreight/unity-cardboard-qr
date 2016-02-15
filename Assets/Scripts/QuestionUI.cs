@@ -5,27 +5,23 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
-    public class QuestionUI : MonoBehaviour
+    public class QuestionUi : MonoBehaviour
     {
-        private Question question;
+        private Question _question;
 
-        public void Start()
+        protected virtual void Start()
         {
-            // TODO: debug question
-            //string[] answers = { "Ich", "Du", "Deine Mama", "Keiner" };
-            //GlobalState.CurrentQuestion = new Question(0, "Hier steht auch manchmal eine sehr lange Frage, aber auch das sollte gehen. Das war jetzt eher ein Satz, deshalb: Wer ist der King?", answers, 2);
-
-            this.question = GlobalState.Instance.CurrentQuestion;
+            _question = GlobalState.Instance.CurrentQuestion;
 
             // init UI
-            GameObject.Find("QuestionText").GetComponent<Text>().text = this.question.Text;
-            GameObject.Find("Answer1Button").GetComponentInChildren<Text>().text = this.question.Answers[0];
-            GameObject.Find("Answer2Button").GetComponentInChildren<Text>().text = this.question.Answers[1];
-            GameObject.Find("Answer3Button").GetComponentInChildren<Text>().text = this.question.Answers[2];
-            GameObject.Find("Answer4Button").GetComponentInChildren<Text>().text = this.question.Answers[3];
+            GameObject.Find("QuestionText").GetComponent<Text>().text = _question.Text;
+            GameObject.Find("Answer1Button").GetComponentInChildren<Text>().text = _question.Answers[0];
+            GameObject.Find("Answer2Button").GetComponentInChildren<Text>().text = _question.Answers[1];
+            GameObject.Find("Answer3Button").GetComponentInChildren<Text>().text = _question.Answers[2];
+            GameObject.Find("Answer4Button").GetComponentInChildren<Text>().text = _question.Answers[3];
         }
 
-        public void Update()
+        protected virtual void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -35,15 +31,15 @@ namespace Assets.Scripts
 
         public void OnAnswerClick(int answerIndex)
         {
-            if (this.question != null && this.question.CorrectAnswer == answerIndex)
+            if (_question != null && _question.CorrectAnswer == answerIndex)
             {
-				GlobalState.Instance.UnlockCoin();
+                GlobalState.Instance.UnlockCoin();
             }
 
             StartCoroutine(WaitAndReturnToCamera());
         }
 
-        IEnumerator WaitAndReturnToCamera()
+        private static IEnumerator WaitAndReturnToCamera()
         {
             yield return new WaitForSeconds(0.5f);
             SceneManager.LoadScene(Config.CameraScene);

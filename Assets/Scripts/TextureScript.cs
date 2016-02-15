@@ -36,8 +36,7 @@ namespace Assets.Scripts
         private AudioSource _coin;
 
         // Use this for initialization
-        // ReSharper disable once UnusedMember.Local
-        private void Start()
+        protected virtual void Start()
         {
             TextureScriptInstance = this;
 
@@ -102,8 +101,7 @@ namespace Assets.Scripts
         }
 
         // Update is called once per frame
-        // ReSharper disable once UnusedMember.Local
-        private void Update()
+        protected virtual void Update()
         {
             if (Input.touchCount > 0)
             {
@@ -144,17 +142,14 @@ namespace Assets.Scripts
         }
 
         // Sent to all game objects before the application is quit.
-        // ReSharper disable once UnusedMember.Local
-        private void OnApplicationQuit()
+        protected virtual void OnApplicationQuit()
         {
             _runThread = false;
         }
 
         // This function is called when the MonoBehaviour will be destroyed.
-        // ReSharper disable once UnusedMember.Local
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
-            Debug.Log("CameraScene OnDestroy!");
             _qrCodeThread.Abort();
             _webcamTexture.Stop();
         }
