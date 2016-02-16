@@ -12,11 +12,14 @@ namespace Assets.Scripts
         // API
         // TODO: FH Wedel server URL
         // tim
-        public const string ApiUrlQuestionCount =
-            "http://192.168.1.30/cardboard-qr-questionform/api.php/questioncount";
+        //public const string ApiUrlQuestionCount =
+        //    "http://192.168.1.30/cardboard-qr-questionform/api.php/questioncount";
 
         // mervyn
         //		public const string ApiUrlQuestionCount = "http://192.168.178.32/cardboard-qr-marker-frontend/api.php/questioncount";
+
+		// fh wedel merv
+		public const string ApiUrlQuestionCount = "http://stud.fh-wedel.de/~inf101368/qrcode/api.php/questioncount";
 
         // storage
         public static readonly string StatePath = Application.persistentDataPath + "/globalState.dat";
