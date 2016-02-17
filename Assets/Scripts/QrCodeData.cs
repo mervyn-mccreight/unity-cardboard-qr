@@ -136,6 +136,7 @@ namespace Assets.Scripts
                 position = p2 + (max/2);
             }
 
+            // TODO: use real camera width x height
             return new Vector3((position.x - (float) Config.CamWidth/2)/Config.CamWidth*1.334f*10*-1, 2,
                 (position.y - (float) Config.CamHeight/2)/Config.CamHeight*10);
         }

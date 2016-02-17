@@ -26,6 +26,8 @@ namespace Assets.Scripts
         public static CameraScript CameraScriptInstance;
 
         private AudioSource _coin;
+        private int _realCamWidth;
+        private int _realCamHeight;
 
         // Use this for initialization
         protected virtual void Start()
@@ -46,7 +48,6 @@ namespace Assets.Scripts
                 foreach (WebCamDevice device in WebCamTexture.devices)
                 {
                     Debug.Log("WebCamDevice: " + device.name);
-                    Debug.Log("WebCamDevice: " + device.name);
                     Debug.Log("FrontFacing? " + device.isFrontFacing);
                     if (!device.isFrontFacing)
                     {
@@ -58,6 +59,8 @@ namespace Assets.Scripts
 
                 GetComponent<Renderer>().material.SetTexture("_MainTex", _webcamTexture);
                 _webcamTexture.Play();
+                _realCamWidth = _webcamTexture.width;
+                _realCamHeight = _webcamTexture.height;
 
                 _qrCodeThread = new Thread(DecodeQr);
                 _qrCodeThread.Start();
@@ -79,8 +82,7 @@ namespace Assets.Scripts
                 // waiting.
                 if (_pixels != null)
                 {
-                    // running.
-                    LuminanceSource lum = new Color32LuminanceSource(_pixels, Config.CamWidth, Config.CamHeight);
+                    LuminanceSource lum = new Color32LuminanceSource(_pixels, _realCamWidth, _realCamHeight);
                     HybridBinarizer bin = new HybridBinarizer(lum);
                     BinaryBitmap binBip = new BinaryBitmap(bin);
                     BitMatrix matrix = binBip.BlackMatrix;
