@@ -117,15 +117,18 @@ namespace Assets.Scripts
 
         public Vector3 CenterToPlane()
         {
+            // the three points of interest in a qr code
             var p1 = new Vector3(_target[0].X, _target[0].Y);
             var p2 = new Vector3(_target[1].X, _target[1].Y);
             var p3 = new Vector3(_target[2].X, _target[2].Y);
 
+            // distance between the three points
             var ab = p2 - p1;
             var ac = p3 - p1;
 
+            // determine which distance is the diagonal of the qr code
+            // position equals the midway point of the diagonal
             var max = Diagonal();
-
             Vector3 position;
             if (max == ab || max == ac)
             {
@@ -136,9 +139,17 @@ namespace Assets.Scripts
                 position = p2 + (max/2);
             }
 
+            float w = GlobalState.Instance.CamWidth;
+            float h = GlobalState.Instance.CamHeight;
+
+            float ratio = w/h;
+
             // TODO: use real camera width x height
-            return new Vector3((position.x - (float) Config.CamWidth/2)/Config.CamWidth*1.334f*10*-1, 2,
-                (position.y - (float) Config.CamHeight/2)/Config.CamHeight*10);
+            return new Vector3(
+                                (position.x - w/2) / w * ratio * 10 * -1,
+                                2,
+                                (position.y - h/2) / h * 10
+                            );
         }
 
         private Vector3 ScaleFactor()

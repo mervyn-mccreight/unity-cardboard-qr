@@ -56,6 +56,18 @@ namespace Assets.Scripts
             set { _currentCoin = value; }
         }
 
+        public int CamWidth
+        {
+            get { return _camWidth; }
+            set { _camWidth = value; }
+        }
+
+        public int CamHeight
+        {
+            get { return _camHeight; }
+            set { _camHeight = value; }
+        }
+
         private readonly List<int> _unlockedCoins = new List<int>();
         private readonly List<int> _collectedCoins = new List<int>();
 
@@ -100,6 +112,10 @@ namespace Assets.Scripts
         [NonSerialized] private int _currentCoin = -1;
 
         [NonSerialized] private Question _currentQuestion;
+
+        [NonSerialized] private int _camWidth;
+        [NonSerialized] private int _camHeight;
+
 
         public void Reset()
         {

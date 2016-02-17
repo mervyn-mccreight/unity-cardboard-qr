@@ -26,8 +26,6 @@ namespace Assets.Scripts
         public static CameraScript CameraScriptInstance;
 
         private AudioSource _coin;
-        private int _realCamWidth;
-        private int _realCamHeight;
 
         // Use this for initialization
         protected virtual void Start()
@@ -59,8 +57,10 @@ namespace Assets.Scripts
 
                 GetComponent<Renderer>().material.SetTexture("_MainTex", _webcamTexture);
                 _webcamTexture.Play();
-                _realCamWidth = _webcamTexture.width;
-                _realCamHeight = _webcamTexture.height;
+                GlobalState.Instance.CamWidth = _webcamTexture.width;
+                GlobalState.Instance.CamHeight = _webcamTexture.height;
+                float ratio = (float) _webcamTexture.width/_webcamTexture.height;
+                gameObject.transform.localScale = new Vector3(ratio, 1, 1);
 
                 _qrCodeThread = new Thread(DecodeQr);
                 _qrCodeThread.Start();
@@ -82,7 +82,7 @@ namespace Assets.Scripts
                 // waiting.
                 if (_pixels != null)
                 {
-                    LuminanceSource lum = new Color32LuminanceSource(_pixels, _realCamWidth, _realCamHeight);
+                    LuminanceSource lum = new Color32LuminanceSource(_pixels, GlobalState.Instance.CamWidth, GlobalState.Instance.CamHeight);
                     HybridBinarizer bin = new HybridBinarizer(lum);
                     BinaryBitmap binBip = new BinaryBitmap(bin);
                     BitMatrix matrix = binBip.BlackMatrix;
