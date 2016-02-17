@@ -144,10 +144,14 @@ namespace Assets.Scripts
 
             float ratio = w/h;
 
-            // TODO: use real camera width x height
+            // position.x - w/2 => move coordinate origin to center
+            // / w => normalize (0..1)
+            // * ratio => height will be in (0..1), width = height*ratio
+            // * 10 => plane is 10 units wide
+            // * -1 => orientation of plane(?)
             return new Vector3(
                                 (position.x - w/2) / w * ratio * 10 * -1,
-                                2,
+                                2, // in front of plane
                                 (position.y - h/2) / h * 10
                             );
         }

@@ -53,10 +53,19 @@ namespace Assets.Scripts
                     }
                 }
 
-                _webcamTexture = new WebCamTexture(_backFacing.name, Config.CamWidth, Config.CamHeight);
+                // TODO: make prettier. this is dirty
+                _webcamTexture = new WebCamTexture(_backFacing.name, 1024, 768);
+                _webcamTexture.Play();
+                if (_webcamTexture.width != 1024 || _webcamTexture.height != 768)
+                {
+                    _webcamTexture.Stop();
+                    _webcamTexture = new WebCamTexture(_backFacing.name, 640, 480);
+                    _webcamTexture.Play();
+                }
 
                 GetComponent<Renderer>().material.SetTexture("_MainTex", _webcamTexture);
-                _webcamTexture.Play();
+                Debug.Log(string.Format("Actual camera dimens: {0}x{1}", _webcamTexture.width, _webcamTexture.height));
+
                 GlobalState.Instance.CamWidth = _webcamTexture.width;
                 GlobalState.Instance.CamHeight = _webcamTexture.height;
                 float ratio = (float) _webcamTexture.width/_webcamTexture.height;
