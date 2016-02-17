@@ -10,17 +10,19 @@ namespace Assets.Scripts
         // Use this for initialization
         protected virtual IEnumerator Start()
         {
-            // do not destroy this instance on scene changes.
-
-            var www = new WWW(Config.ApiUrlQuestionCount);
+            var countWww = new WWW(Config.ApiUrlQuestionCount);
+            var questionsWww = new WWW(Config.ApiUrlQuestions);
 
             // Wait for download to complete
-            yield return www;
+            yield return questionsWww;
+            yield return countWww;
+
+            GlobalState.Instance.AllQuestions = JsonUtility.FromJson<Questions>(questionsWww.text);
 
             GameObject.Find("QuestionProgressText").GetComponent<Text>().text = string.Format("Fragen: {0}/{1}",
-                GlobalState.Instance.UnlockedCoinCount(), www.text);
+                GlobalState.Instance.UnlockedCoinCount(), countWww.text);
             GameObject.Find("CoinProgressText").GetComponent<Text>().text = string.Format("Münzen: {0}/{1}",
-                GlobalState.Instance.CollectedCoinCount(), www.text);
+                GlobalState.Instance.CollectedCoinCount(), countWww.text);
 
             // TODO: show win screen
         }

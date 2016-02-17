@@ -44,7 +44,7 @@ namespace Assets.Scripts
                         case DataType.Question:
                             if (!GlobalState.Instance.IsCoinUnlocked(dataFromJson.id))
                             {
-                                GlobalState.Instance.CurrentQuestion = dataFromJson.ToQuestion();
+                                GlobalState.Instance.CurrentQuestion = dataFromJson.id;
                                 SceneManager.LoadScene(Config.QuestionScene);
                             }
                             else

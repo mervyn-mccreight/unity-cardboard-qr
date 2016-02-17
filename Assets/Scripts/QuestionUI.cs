@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +13,7 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
-            _question = GlobalState.Instance.CurrentQuestion;
+            _question = GlobalState.Instance.AllQuestions.questions.First(x => x.id == GlobalState.Instance.CurrentQuestion).ToQuestion();
 
             // init UI
             GameObject.Find("QuestionText").GetComponent<Text>().text = _question.Text;
@@ -25,6 +27,7 @@ namespace Assets.Scripts
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                GlobalState.Instance.CurrentQuestion = -1;
                 SceneManager.LoadScene(Config.CameraScene);
             }
         }

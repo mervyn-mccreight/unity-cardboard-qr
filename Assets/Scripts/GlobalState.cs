@@ -44,7 +44,7 @@ namespace Assets.Scripts
             Debug.Log("GlobalState persisted");
         }
 
-        public Question CurrentQuestion
+        public int CurrentQuestion
         {
             get { return _currentQuestion; }
             set { _currentQuestion = value; }
@@ -68,6 +68,12 @@ namespace Assets.Scripts
             set { _camHeight = value; }
         }
 
+        public Questions AllQuestions
+        {
+            get { return _allQuestions; }
+            set { _allQuestions = value; }
+        }
+
         private readonly List<int> _unlockedCoins = new List<int>();
         private readonly List<int> _collectedCoins = new List<int>();
 
@@ -83,9 +89,10 @@ namespace Assets.Scripts
 
         public void UnlockCoin()
         {
-            if (CurrentQuestion != null && !_unlockedCoins.Contains(CurrentQuestion.Id))
+            if (CurrentQuestion >= 0 && !_unlockedCoins.Contains(CurrentQuestion))
             {
-                _unlockedCoins.Add(CurrentQuestion.Id);
+                _unlockedCoins.Add(CurrentQuestion);
+                Instance.CurrentQuestion = -1;
             }
         }
 
@@ -110,17 +117,16 @@ namespace Assets.Scripts
         }
 
         [NonSerialized] private int _currentCoin = -1;
-
-        [NonSerialized] private Question _currentQuestion;
-
+        [NonSerialized] private int _currentQuestion = -1;
         [NonSerialized] private int _camWidth;
         [NonSerialized] private int _camHeight;
+        [NonSerialized] private Questions _allQuestions;
 
 
         public void Reset()
         {
             CurrentCoin = -1;
-            CurrentQuestion = null;
+            CurrentQuestion = -1;
         }
     }
 }
