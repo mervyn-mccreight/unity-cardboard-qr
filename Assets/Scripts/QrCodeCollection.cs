@@ -26,6 +26,8 @@ namespace Assets.Scripts
                     obj.MarkAsDestroy();
                 });
 
+				_contentString = "No QR-Code detected.";
+
                 return;
             }
 
