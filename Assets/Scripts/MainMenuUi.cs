@@ -10,6 +10,8 @@ namespace Assets.Scripts
         // Use this for initialization
         protected virtual IEnumerator Start()
         {
+            Application.targetFrameRate = 30;
+
             var questionsWww = new WWW(Config.ApiUrlQuestions);
 
             // Wait for download to complete
