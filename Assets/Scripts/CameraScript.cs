@@ -183,6 +183,7 @@ namespace Assets.Scripts
         // This function is called when the MonoBehaviour will be destroyed.
         protected virtual void OnDestroy()
         {
+			_runThread = false;
             _qrCodeThread.Abort();
 //            _webcamTexture.Stop();    <-- stopping the WebCamTexture is a major performance issue (>500ms lag)
         }
