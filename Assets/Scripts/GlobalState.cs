@@ -93,6 +93,7 @@ namespace Assets.Scripts
             {
                 _unlockedCoins.Add(CurrentQuestion);
                 Instance.CurrentQuestion = -1;
+                Save();
             }
         }
 
@@ -101,6 +102,7 @@ namespace Assets.Scripts
             if (CurrentCoin >= 0 && !_collectedCoins.Contains(CurrentCoin))
             {
                 _collectedCoins.Add(CurrentCoin);
+                Save();
                 return true;
             }
             return false;
