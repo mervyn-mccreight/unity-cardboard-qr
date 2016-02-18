@@ -45,23 +45,33 @@ namespace Assets.Scripts
                 Debug.Log("access to webcam granted!");
                 Debug.Log("#WebCamDevices: " + WebCamTexture.devices.GetLength(0));
 
-                foreach (WebCamDevice device in WebCamTexture.devices)
+                if (GlobalState.Instance.WebCamTexture == null)
                 {
-                    Debug.Log("WebCamDevice: " + device.name);
-                    Debug.Log("FrontFacing? " + device.isFrontFacing);
-                    if (!device.isFrontFacing)
+                    foreach (WebCamDevice device in WebCamTexture.devices)
                     {
-                        _backFacing = device;
+                        Debug.Log("WebCamDevice: " + device.name);
+                        Debug.Log("FrontFacing? " + device.isFrontFacing);
+                        if (!device.isFrontFacing)
+                        {
+                            _backFacing = device;
+                        }
                     }
-                }
 
-                // TODO: make prettier. this is dirty
-                _webcamTexture = new WebCamTexture(_backFacing.name, 1024, 768);
-                _webcamTexture.Play();
-                if (_webcamTexture.width != 1024 || _webcamTexture.height != 768)
+                    // TODO: make prettier. this is dirty
+                    _webcamTexture = new WebCamTexture(_backFacing.name, 1024, 768);
+                    _webcamTexture.Play();
+                    if (_webcamTexture.width != 1024 || _webcamTexture.height != 768)
+                    {
+                        _webcamTexture.Stop();
+                        _webcamTexture = new WebCamTexture(_backFacing.name, 640, 480);
+                        _webcamTexture.Play();
+                    }
+
+                    GlobalState.Instance.WebCamTexture = _webcamTexture;
+                }
+                else
                 {
-                    _webcamTexture.Stop();
-                    _webcamTexture = new WebCamTexture(_backFacing.name, 640, 480);
+                    _webcamTexture = GlobalState.Instance.WebCamTexture;
                     _webcamTexture.Play();
                 }
 
@@ -135,7 +145,6 @@ namespace Assets.Scripts
                 SceneManager.LoadScene(Config.MainMenuScene);
             }
 
-
             // destroy data which is marked as to be destroyed from the thread.
             _qrCodeCollection.DestroyMarkedOnUpdate();
 
@@ -166,7 +175,7 @@ namespace Assets.Scripts
         protected virtual void OnDestroy()
         {
             _qrCodeThread.Abort();
-            _webcamTexture.Stop();
+//            _webcamTexture.Stop();    <-- stopping the WebCamTexture is a major performance issue (>500ms lag)
         }
 
         public void ShowToast(string message, float delay)

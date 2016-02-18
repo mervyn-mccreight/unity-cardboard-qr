@@ -74,6 +74,13 @@ namespace Assets.Scripts
             set { _allQuestions = value; }
         }
 
+        public WebCamTexture WebCamTexture
+        {
+            get { return _webCamTexture; }
+            set { _webCamTexture = value; }
+        }
+
+
         private readonly List<int> _unlockedCoins = new List<int>();
         private readonly List<int> _collectedCoins = new List<int>();
 
@@ -123,6 +130,7 @@ namespace Assets.Scripts
         [NonSerialized] private int _camWidth;
         [NonSerialized] private int _camHeight;
         [NonSerialized] private Questions _allQuestions;
+        [NonSerialized] private WebCamTexture _webCamTexture;
 
 
         public void Reset()
