@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,6 +15,7 @@ namespace Assets.Scripts
         public Text UiText;
         public GameObject Toast;
         public const float ToastLength = 2.0f;
+        public const float ToastLengthLong = 5.0f;
 
         private WebCamTexture _webcamTexture;
         private WebCamDevice _backFacing;
@@ -78,6 +80,11 @@ namespace Assets.Scripts
             {
                 Debug.LogError("No User Authorization for Camera Device.");
             }
+
+            if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
+            {
+                ShowToast("Congratulations! Go collect your prize :D", ToastLengthLong);
+            }
         }
 
         // Function for just fetching the QR-Codes in the WebCamTexture-Image
@@ -114,6 +121,11 @@ namespace Assets.Scripts
                     {
                         _coin.Play();
                         _qrCodeCollection.DestroyDataObject(GlobalState.Instance.CurrentCoin);
+
+                        if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
+                        {
+                            ShowToast("Congratulations! Go collect your prize :D", ToastLengthLong);
+                        }
                     }
                 }
             }
