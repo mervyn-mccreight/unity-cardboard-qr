@@ -45,7 +45,7 @@ namespace Assets.Scripts
                             if (!GlobalState.Instance.IsCoinUnlocked(dataFromJson.id))
                             {
                                 GlobalState.Instance.CurrentQuestion = dataFromJson.id;
-                                SceneManager.LoadScene(Config.QuestionScene);
+                                GlobalState.Instance.SceneToSwitchTo = Config.Scenes.Question;
                             }
                             else
                             {

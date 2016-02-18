@@ -12,6 +12,8 @@ namespace Assets.Scripts
         {
             Application.targetFrameRate = 30;
 
+            GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
+
             var questionsWww = new WWW(Config.ApiUrlQuestions);
 
             // Wait for download to complete
@@ -41,7 +43,7 @@ namespace Assets.Scripts
 
         public void OnGoClick()
         {
-            SceneManager.LoadScene(Config.CameraScene);
+            SceneManager.LoadScene(Config.SceneName(Config.Scenes.Camera));
         }
 
         public void OnHelpClick()

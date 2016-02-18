@@ -32,6 +32,8 @@ namespace Assets.Scripts
         // Use this for initialization
         protected virtual void Start()
         {
+            GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
+
             CameraScriptInstance = this;
 
             _coin = GetComponent<AudioSource>();
@@ -142,7 +144,7 @@ namespace Assets.Scripts
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                SceneManager.LoadScene(Config.MainMenuScene);
+                SceneManager.LoadScene(Config.SceneName(Config.Scenes.MainMenu));
             }
 
             // destroy data which is marked as to be destroyed from the thread.
@@ -163,6 +165,13 @@ namespace Assets.Scripts
 
             // then fetch new data for new calculations.
             _pixels = _webcamTexture.GetPixels32();
+
+            var sceneToSwitchTo = GlobalState.Instance.SceneToSwitchTo;
+            if (sceneToSwitchTo != Config.Scenes.None)
+            {
+                GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
+                SceneManager.LoadScene(Config.SceneName(sceneToSwitchTo));
+            }
         }
 
         // Sent to all game objects before the application is quit.

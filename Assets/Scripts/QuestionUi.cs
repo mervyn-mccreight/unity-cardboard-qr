@@ -16,6 +16,8 @@ namespace Assets.Scripts
 
         protected virtual void Start()
         {
+            GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
+
             _question = GlobalState.Instance.AllQuestions.questions.First(x => x.id == GlobalState.Instance.CurrentQuestion).ToQuestion();
 
             // init UI
@@ -31,7 +33,7 @@ namespace Assets.Scripts
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 GlobalState.Instance.CurrentQuestion = -1;
-                SceneManager.LoadScene(Config.CameraScene);
+                SceneManager.LoadScene(Config.SceneName(Config.Scenes.Camera));
             }
         }
 
@@ -58,7 +60,8 @@ namespace Assets.Scripts
         private static IEnumerator WaitAndReturnToCamera()
         {
             yield return new WaitForSeconds(.75f);
-            SceneManager.LoadScene(Config.CameraScene);
+            GlobalState.Instance.CurrentQuestion = -1;
+            SceneManager.LoadScene(Config.SceneName(Config.Scenes.Camera));
         }
     }
 }

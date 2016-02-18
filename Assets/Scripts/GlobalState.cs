@@ -80,6 +80,12 @@ namespace Assets.Scripts
             set { _webCamTexture = value; }
         }
 
+        public Config.Scenes SceneToSwitchTo
+        {
+            get { return _sceneToSwitchTo; }
+            set { _sceneToSwitchTo = value; }
+        }
+
 
         private readonly List<int> _unlockedCoins = new List<int>();
         private readonly List<int> _collectedCoins = new List<int>();
@@ -131,6 +137,7 @@ namespace Assets.Scripts
         [NonSerialized] private int _camHeight;
         [NonSerialized] private Questions _allQuestions;
         [NonSerialized] private WebCamTexture _webCamTexture;
+        [NonSerialized] private Config.Scenes _sceneToSwitchTo = Config.Scenes.None;
 
 
         public void Reset()
