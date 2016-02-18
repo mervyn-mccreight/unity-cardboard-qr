@@ -51,7 +51,7 @@ namespace Assets.Scripts
                             }
                             else
                             {
-                                CameraScript.CameraScriptInstance.ShowToast("Already unlocked!", CameraScript.ToastLength);
+                                CameraScript.CameraScriptInstance.SetToastToShow("Already unlocked!", CameraScript.ToastLength);
                             }
                             break;
                         case DataType.Coin:
@@ -66,7 +66,7 @@ namespace Assets.Scripts
                             }
                             else
                             {
-                                CameraScript.CameraScriptInstance.ShowToast("Answer the question first!", CameraScript.ToastLength);
+                                CameraScript.CameraScriptInstance.SetToastToShow("Answer the question first!", CameraScript.ToastLength);
                             }
                             break;
                     }

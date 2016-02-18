@@ -29,6 +29,9 @@ namespace Assets.Scripts
 
         private AudioSource _coin;
 
+        private string _toastMessage;
+        private float _toastDuration;
+
         // Use this for initialization
         protected virtual void Start()
         {
@@ -95,7 +98,7 @@ namespace Assets.Scripts
 
             if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
             {
-                ShowToast("Congratulations! Go collect your prize :D", ToastLengthLong);
+                SetToastToShow("Congratulations! Go collect your prize :D", ToastLengthLong);
             }
         }
 
@@ -136,7 +139,7 @@ namespace Assets.Scripts
 
                         if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
                         {
-                            ShowToast("Congratulations! Go collect your prize :D", ToastLengthLong);
+                            SetToastToShow("Congratulations! Go collect your prize :D", ToastLengthLong);
                         }
                     }
                 }
@@ -172,6 +175,8 @@ namespace Assets.Scripts
                 GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
                 SceneManager.LoadScene(Config.SceneName(sceneToSwitchTo));
             }
+
+            ShowToast();
         }
 
         // Sent to all game objects before the application is quit.
@@ -188,13 +193,26 @@ namespace Assets.Scripts
 //            _webcamTexture.Stop();    <-- stopping the WebCamTexture is a major performance issue (>500ms lag)
         }
 
-        public void ShowToast(string message, float delay)
+        public void SetToastToShow(string message, float duration)
         {
-            if (!Toast.activeInHierarchy)
+            _toastMessage = message;
+            _toastDuration = duration;
+        }
+
+        private void ResetToast()
+        {
+            _toastMessage = null;
+            _toastDuration = 0f;
+        }
+
+        private void ShowToast()
+        {
+            if (_toastMessage != null && _toastDuration > 0f && !Toast.activeInHierarchy)
             {
-                Toast.GetComponentInChildren<Text>().text = message;
+                Toast.GetComponentInChildren<Text>().text = _toastMessage;
                 Toast.SetActive(true);
-                StartCoroutine(HideToast(delay));
+                StartCoroutine(HideToast(_toastDuration));
+                ResetToast();
             }
         }
 
