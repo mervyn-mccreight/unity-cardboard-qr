@@ -11,6 +11,9 @@ namespace Assets.Scripts
     {
         private Question _question;
 
+        public AudioSource AudioCorrect;
+        public AudioSource AudioFail;
+
         protected virtual void Start()
         {
             _question = GlobalState.Instance.AllQuestions.questions.First(x => x.id == GlobalState.Instance.CurrentQuestion).ToQuestion();
@@ -34,17 +37,27 @@ namespace Assets.Scripts
 
         public void OnAnswerClick(int answerIndex)
         {
+            var button = GameObject.Find(string.Format("Answer{0}Button", answerIndex+1)).GetComponent<Button>();
+            var colors = button.colors;
             if (_question != null && _question.CorrectAnswer == answerIndex)
             {
                 GlobalState.Instance.UnlockCoin();
+                AudioCorrect.Play();
+                colors.highlightedColor = Color.green;
+            }
+            else
+            {
+                AudioFail.Play();
+                colors.highlightedColor = Color.red;
             }
 
+            button.colors = colors;
             StartCoroutine(WaitAndReturnToCamera());
         }
 
         private static IEnumerator WaitAndReturnToCamera()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(.75f);
             SceneManager.LoadScene(Config.CameraScene);
         }
     }
