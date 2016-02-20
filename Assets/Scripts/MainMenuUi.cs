@@ -48,8 +48,7 @@ namespace Assets.Scripts
 
         public void OnHelpClick()
         {
-            // TODO: consider help
-            Debug.Log("Help");
+			SceneManager.LoadScene(Config.SceneName(Config.Scenes.Help));
         }
     }
 }

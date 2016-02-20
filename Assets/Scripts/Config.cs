@@ -10,6 +10,7 @@ namespace Assets.Scripts
             MainMenu = 0,
             Camera = 1,
             Question = 2,
+			Help = 3,
             None = -1
         }
 
@@ -17,7 +18,8 @@ namespace Assets.Scripts
         {
             "MainMenuScene",
             "CameraScene",
-            "QuestionScene"
+            "QuestionScene",
+			"HelpScene"
         };
 
         public static string SceneName(Scenes scene)
