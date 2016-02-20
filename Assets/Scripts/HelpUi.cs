@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.SceneManagement;
 using Assets.Scripts;
+using UnityEngine.UI;
 
 public class HelpUi : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () 
 	{
-	
+		GameObject.Find ("HelpText").GetComponent<Text> ().text = StringResources.HelpText;
 	}
 	
 	// Update is called once per frame
