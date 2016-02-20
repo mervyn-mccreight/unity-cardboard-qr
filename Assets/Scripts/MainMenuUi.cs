@@ -36,10 +36,15 @@ namespace Assets.Scripts
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                GlobalState.Save();
-                Application.Quit();
+				SaveStateAndCloseApplication ();
             }
         }
+
+		public void SaveStateAndCloseApplication() 
+		{
+			GlobalState.Save();
+			Application.Quit();
+		}
 
         public void OnGoClick()
         {
