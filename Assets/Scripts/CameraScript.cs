@@ -85,8 +85,21 @@ namespace Assets.Scripts
 
                 GlobalState.Instance.CamWidth = _webcamTexture.width;
                 GlobalState.Instance.CamHeight = _webcamTexture.height;
-                float ratio = (float) _webcamTexture.width/_webcamTexture.height;
-                gameObject.transform.localScale = new Vector3(ratio, 1, 1);
+                float camRatio = (float) _webcamTexture.width/_webcamTexture.height;
+                float screenRatio = (float) Screen.width/Screen.height;
+
+                // Scale plane so it fills the screen while keeping the camera's aspect ratio.
+                // If the camera's aspect ratio differs from the screen's,
+                // one side will match exactly and the other side will be larger than the screen's dimension.
+                var idealHeight = 0.7f;
+                if (screenRatio > camRatio)
+                {
+                    gameObject.transform.localScale = new Vector3(screenRatio * idealHeight, 1, screenRatio * idealHeight / camRatio);
+                }
+                else
+                {
+                    gameObject.transform.localScale = new Vector3(camRatio * idealHeight, 1, idealHeight);
+                }
 
                 _qrCodeThread = new Thread(DecodeQr);
                 _qrCodeThread.Start();
@@ -167,7 +180,10 @@ namespace Assets.Scripts
             // idee: synchronisation über das wrapper objekt mit bool und pixels.
 
             // then fetch new data for new calculations.
-            _pixels = _webcamTexture.GetPixels32();
+            if (_webcamTexture.isPlaying)
+            {
+                _pixels = _webcamTexture.GetPixels32();
+            }
 
             var sceneToSwitchTo = GlobalState.Instance.SceneToSwitchTo;
             if (sceneToSwitchTo != Config.Scenes.None)
