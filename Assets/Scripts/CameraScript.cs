@@ -114,7 +114,7 @@ namespace Assets.Scripts
 
             if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
             {
-                SetToastToShow("Congratulations! Go collect your prize :D", ToastLengthLong);
+                SetToastToShow(StringResources.WinToastMessage, ToastLengthLong);
             }
         }
 
@@ -155,7 +155,7 @@ namespace Assets.Scripts
 
                         if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
                         {
-                            SetToastToShow("Congratulations! Go collect your prize :D", ToastLengthLong);
+                            SetToastToShow(StringResources.WinToastMessage, ToastLengthLong);
                         }
                     }
                 }

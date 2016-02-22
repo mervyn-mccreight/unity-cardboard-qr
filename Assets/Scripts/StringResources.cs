@@ -14,10 +14,13 @@ namespace Assets.Scripts
         // help-scene texts
         public const string HelpText = "In den Gebäuden der Fachhochschule sind verschiedene QR-Codes versteckt.\nEs gibt Fragen- und Münz-QR-Codes.\nFinde die Fragen-QR-Codes und beantworte die Fragen, um die Münz-QR-Codes freizuschalten.\nNachdem eine Frage eine Münze freigeschaltet hat, sammle diese ein.\nFinde und sammle alle Münzen, um einen Preis zu gewinnen.";
 		public const string HelpSceneHeading = "Anleitung";
-
-		// button texts
 		public const string BackButtonText = "Zurück";
 
-
+        // camera scene texts
+	    public const string WinToastMessage = "Congratulations! Go collect your prize :D";
+	    public const string QuestionAlreadyAnsweredToastMessage = "Already unlocked!";
+	    public const string CoinAlreadyCollectedToastMessage = "Coin is already collected!";
+        public const string TapCoinToCollectToastMessage = "Tap the screen to capture the coin!";
+        public const string AnswerQuestionFirstToastMessage = "Answer the question first!";
 	}
 }
