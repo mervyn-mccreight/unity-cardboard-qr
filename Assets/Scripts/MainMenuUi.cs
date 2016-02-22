@@ -11,8 +11,13 @@ namespace Assets.Scripts
         protected virtual IEnumerator Start()
         {
             Application.targetFrameRate = 30;
-
             GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
+
+            GameObject.Find("QuestionProgressText").GetComponent<Text>().text = string.Format(StringResources.QuestionProgressText, "?", "?");
+            GameObject.Find("CoinProgressText").GetComponent<Text>().text = string.Format(StringResources.CoinProgressText, "?", "?");
+            GameObject.Find("TitleText").GetComponent<Text>().text = StringResources.MainMenuHeading;
+            GameObject.Find("GoButton").GetComponentInChildren<Text>().text = StringResources.GoButtonText;
+            GameObject.Find("HelpButton").GetComponentInChildren<Text>().text = StringResources.HelpButtonText;
 
             var questionsWww = new WWW(Config.ApiUrlQuestions);
 
@@ -23,9 +28,9 @@ namespace Assets.Scripts
 
             questionsWww.Dispose();
 
-            GameObject.Find("QuestionProgressText").GetComponent<Text>().text = string.Format("Fragen: {0}/{1}",
+            GameObject.Find("QuestionProgressText").GetComponent<Text>().text = string.Format(StringResources.QuestionProgressText,
                 GlobalState.Instance.UnlockedCoinCount(), GlobalState.Instance.AllQuestions.questions.Length);
-            GameObject.Find("CoinProgressText").GetComponent<Text>().text = string.Format("Münzen: {0}/{1}",
+            GameObject.Find("CoinProgressText").GetComponent<Text>().text = string.Format(StringResources.CoinProgressText,
                 GlobalState.Instance.CollectedCoinCount(), GlobalState.Instance.AllQuestions.questions.Length);
 
             // TODO: show win screen
