@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +11,6 @@ namespace Assets.Scripts
 {
     public class CameraScript : MonoBehaviour
     {
-        public Text UiText;
         public GameObject Toast;
         public const float ToastLength = 2.0f;
         public const float ToastLengthLong = 5.0f;
@@ -168,9 +166,6 @@ namespace Assets.Scripts
 
             // destroy data which is marked as to be destroyed from the thread.
             _qrCodeCollection.DestroyMarkedOnUpdate();
-
-            // first draw upon the old data.
-            UiText.text = _qrCodeCollection.ToString();
 
             // update the qr code object drawings.
             _qrCodeCollection.Update(transform);
