@@ -62,7 +62,12 @@ namespace Assets.Scripts
                                     GlobalState.Instance.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
                                     _data.Add(new QrCodeData(points, null, dataFromJson.id));
-									CameraScript.CameraScriptInstance.SetToastToShow ("Tap the screen to capture the coin!", CameraScript.ToastLengthLong);
+                                    CameraScript.CameraScriptInstance.SetToastToShow(
+                                        "Tap the screen to capture the coin!", CameraScript.ToastLengthLong);
+                                }
+                                else
+                                {
+                                    CameraScript.CameraScriptInstance.SetToastToShow("Coin is already collected!", CameraScript.ToastLength);
                                 }
                             }
                             else
