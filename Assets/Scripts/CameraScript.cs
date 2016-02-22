@@ -101,6 +101,9 @@ namespace Assets.Scripts
                     gameObject.transform.localScale = new Vector3(camRatio * idealHeight, 1, idealHeight);
                 }
 
+                GlobalState.Instance.PlaneWidth = gameObject.transform.localScale.x*10;
+                GlobalState.Instance.PlaneHeight = gameObject.transform.localScale.z*10;
+
                 _qrCodeThread = new Thread(DecodeQr);
                 _qrCodeThread.Start();
             }

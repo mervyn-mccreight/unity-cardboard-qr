@@ -86,6 +86,18 @@ namespace Assets.Scripts
             set { _sceneToSwitchTo = value; }
         }
 
+        public float PlaneHeight
+        {
+            get { return _planeHeight; }
+            set { _planeHeight = value; }
+        }
+
+        public float PlaneWidth
+        {
+            get { return _planeWidth; }
+            set { _planeWidth = value; }
+        }
+
 
         private readonly List<int> _unlockedCoins = new List<int>();
         private readonly List<int> _collectedCoins = new List<int>();
@@ -135,10 +147,11 @@ namespace Assets.Scripts
         [NonSerialized] private int _currentQuestion = -1;
         [NonSerialized] private int _camWidth;
         [NonSerialized] private int _camHeight;
+        [NonSerialized] private float _planeWidth;
+        [NonSerialized] private float _planeHeight;
         [NonSerialized] private Questions _allQuestions;
         [NonSerialized] private WebCamTexture _webCamTexture;
         [NonSerialized] private Config.Scenes _sceneToSwitchTo = Config.Scenes.None;
-
 
         public void Reset()
         {

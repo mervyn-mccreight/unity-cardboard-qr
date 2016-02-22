@@ -115,7 +115,7 @@ namespace Assets.Scripts
             return max;
         }
 
-        public Vector3 CenterToPlane()
+        public Vector3 LocalCoinPosition()
         {
             // the three points of interest in a qr code
             var p1 = new Vector3(_target[0].X, _target[0].Y);
@@ -138,22 +138,31 @@ namespace Assets.Scripts
             {
                 position = p2 + (max/2);
             }
+            
+            // pixel coordiate range converted to plane coordinate system range
+            var xTransformed = position.x*GlobalState.Instance.PlaneWidth/GlobalState.Instance.CamWidth;
+            var zTransformed = position.y*GlobalState.Instance.PlaneHeight/GlobalState.Instance.CamHeight;
 
-            float w = GlobalState.Instance.CamWidth;
-            float h = GlobalState.Instance.CamHeight;
+            // align with new coordinate system origin
+            xTransformed -= GlobalState.Instance.PlaneWidth/2;
+            zTransformed -= GlobalState.Instance.PlaneHeight/2;
 
-            float ratio = w/h;
-
-            // position.x - w/2 => move coordinate origin to center
-            // / w => normalize (0..1)
-            // * ratio => height will be in (0..1), width = height*ratio
-            // * 10 => plane is 10 units wide
-            // * -1 => orientation of plane(?)
-            return new Vector3(
-                                (position.x - w/2) / w * ratio * 10 * -1,
-                                2, // in front of plane
-                                (position.y - h/2) / h * 10
-                            );
+            // Calculated relative to camera texture plane:
+            // imaginary plane that the coin will lie on, so that it is in front of the camera texture plane
+            var plane = new Plane(Vector3.up, new Vector3(0, 2, 0));
+            // camera position
+            var cam = new Vector3(0, 6, 0);
+            // QR code center point on camera texture plane
+            var targetPoint = new Vector3(xTransformed*-1, 0, zTransformed);
+            // ray from camera to QR code center
+            var camToTarget = targetPoint - cam;
+            // calculates length of normalized ray where it intersects the imaginary plane
+            // (which is the correct position of the coin when taking perspective into account)
+            float enter;
+            plane.Raycast(new Ray(cam, camToTarget), out enter);
+            
+            // origin of ray + normalized direction * intersection length
+            return cam + (camToTarget.normalized*enter);
         }
 
         private Vector3 ScaleFactor()
@@ -163,7 +172,7 @@ namespace Assets.Scripts
 
         public void UpdateModel()
         {
-            GetModel().transform.localPosition = Interpolate(GetModel().transform.localPosition, CenterToPlane());
+            GetModel().transform.localPosition = Interpolate(GetModel().transform.localPosition, LocalCoinPosition());
             GetModel().transform.localScale = Interpolate(GetModel().transform.localScale, ScaleFactor());
             GetModel().transform.Rotate(Vector3.forward*Time.smoothDeltaTime*100f);
         }

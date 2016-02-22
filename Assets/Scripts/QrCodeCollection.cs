@@ -146,7 +146,7 @@ namespace Assets.Scripts
                     if (coin != null)
                     {
                         coin.transform.SetParent(parent);
-                        coin.transform.localPosition = code.CenterToPlane();
+                        coin.transform.localPosition = code.LocalCoinPosition();
                         code.SetModel(coin);
                     }
                     return;
