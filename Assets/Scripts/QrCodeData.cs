@@ -167,7 +167,7 @@ namespace Assets.Scripts
 
         private Vector3 ScaleFactor()
         {
-            return new Vector3(Diagonal().magnitude/100f, Diagonal().magnitude/100f*0.05f, Diagonal().magnitude/100f);
+            return new Vector3(Diagonal().magnitude/200f, Diagonal().magnitude/200f, Diagonal().magnitude/200f);
         }
 
         public void UpdateModel()
