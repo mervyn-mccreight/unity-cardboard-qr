@@ -138,7 +138,7 @@ namespace Assets.Scripts
             {
                 position = p2 + (max/2);
             }
-            
+
             // pixel coordiate range converted to plane coordinate system range
             var xTransformed = position.x*GlobalState.Instance.PlaneWidth/GlobalState.Instance.CamWidth;
             var zTransformed = position.y*GlobalState.Instance.PlaneHeight/GlobalState.Instance.CamHeight;
@@ -160,7 +160,7 @@ namespace Assets.Scripts
             // (which is the correct position of the coin when taking perspective into account)
             float enter;
             plane.Raycast(new Ray(cam, camToTarget), out enter);
-            
+
             // origin of ray + normalized direction * intersection length
             return cam + (camToTarget.normalized*enter);
         }

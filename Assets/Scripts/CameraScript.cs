@@ -92,11 +92,12 @@ namespace Assets.Scripts
                 var idealHeight = 0.7f;
                 if (screenRatio > camRatio)
                 {
-                    gameObject.transform.localScale = new Vector3(screenRatio * idealHeight, 1, screenRatio * idealHeight / camRatio);
+                    gameObject.transform.localScale = new Vector3(screenRatio*idealHeight, 1,
+                        screenRatio*idealHeight/camRatio);
                 }
                 else
                 {
-                    gameObject.transform.localScale = new Vector3(camRatio * idealHeight, 1, idealHeight);
+                    gameObject.transform.localScale = new Vector3(camRatio*idealHeight, 1, idealHeight);
                 }
 
                 GlobalState.Instance.PlaneWidth = gameObject.transform.localScale.x*10;
@@ -127,7 +128,8 @@ namespace Assets.Scripts
                 // waiting.
                 if (_pixels != null)
                 {
-                    LuminanceSource lum = new Color32LuminanceSource(_pixels, GlobalState.Instance.CamWidth, GlobalState.Instance.CamHeight);
+                    LuminanceSource lum = new Color32LuminanceSource(_pixels, GlobalState.Instance.CamWidth,
+                        GlobalState.Instance.CamHeight);
                     HybridBinarizer bin = new HybridBinarizer(lum);
                     BinaryBitmap binBip = new BinaryBitmap(bin);
                     BitMatrix matrix = binBip.BlackMatrix;
@@ -151,7 +153,8 @@ namespace Assets.Scripts
                         _coin.Play();
                         _qrCodeCollection.DestroyDataObject(GlobalState.Instance.CurrentCoin);
 
-                        if (GlobalState.Instance.AllQuestions.questions.Length == GlobalState.Instance.CollectedCoinCount())
+                        if (GlobalState.Instance.AllQuestions.questions.Length ==
+                            GlobalState.Instance.CollectedCoinCount())
                         {
                             SetToastToShow(StringResources.WinToastMessage, ToastLengthLong);
                         }
@@ -202,7 +205,7 @@ namespace Assets.Scripts
         // This function is called when the MonoBehaviour will be destroyed.
         protected virtual void OnDestroy()
         {
-			_runThread = false;
+            _runThread = false;
             _qrCodeThread.Abort();
 //            _webcamTexture.Stop();    <-- stopping the WebCamTexture is a major performance issue (>500ms lag)
         }

@@ -18,7 +18,9 @@ namespace Assets.Scripts
         {
             GlobalState.Instance.SceneToSwitchTo = Config.Scenes.None;
 
-            _question = GlobalState.Instance.AllQuestions.questions.First(x => x.id == GlobalState.Instance.CurrentQuestion).ToQuestion();
+            _question =
+                GlobalState.Instance.AllQuestions.questions.First(x => x.id == GlobalState.Instance.CurrentQuestion)
+                    .ToQuestion();
 
             // init UI
             GameObject.Find("QuestionText").GetComponent<Text>().text = _question.Text;
@@ -39,7 +41,7 @@ namespace Assets.Scripts
 
         public void OnAnswerClick(int answerIndex)
         {
-            var button = GameObject.Find(string.Format("Answer{0}Button", answerIndex+1)).GetComponent<Button>();
+            var button = GameObject.Find(string.Format("Answer{0}Button", answerIndex + 1)).GetComponent<Button>();
             var colors = button.colors;
             if (_question != null && _question.CorrectAnswer == answerIndex)
             {

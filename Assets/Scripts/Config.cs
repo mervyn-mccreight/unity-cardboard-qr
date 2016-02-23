@@ -10,7 +10,7 @@ namespace Assets.Scripts
             MainMenu = 0,
             Camera = 1,
             Question = 2,
-			Help = 3,
+            Help = 3,
             None = -1
         }
 
@@ -19,7 +19,7 @@ namespace Assets.Scripts
             "MainMenuScene",
             "CameraScene",
             "QuestionScene",
-			"HelpScene"
+            "HelpScene"
         };
 
         public static string SceneName(Scenes scene)
@@ -28,13 +28,6 @@ namespace Assets.Scripts
         }
 
         // API
-        // tim
-//        public const string ApiUrlQuestionCount =   "http://192.168.1.30/cardboard-qr-questionform/api.php/questioncount";
-//        public const string ApiUrlQuestions =       "http://192.168.1.30/cardboard-qr-questionform/api.php/questions/";
-
-        // mervyn
-        //		public const string ApiUrlQuestionCount = "http://192.168.178.32/cardboard-qr-marker-frontend/api.php/questioncount";
-
         // fh wedel merv
         public const string ApiUrlQuestionCount = "http://stud.fh-wedel.de/~inf101368/qrcode/api.php/questioncount";
         public const string ApiUrlQuestions = "http://stud.fh-wedel.de/~inf101368/qrcode/api.php/questions/";

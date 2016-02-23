@@ -26,7 +26,7 @@ namespace Assets.Scripts
                     obj.MarkAsDestroy();
                 });
 
-				_contentString = "No QR-Code detected.";
+                _contentString = "No QR-Code detected.";
 
                 return;
             }
@@ -51,7 +51,8 @@ namespace Assets.Scripts
                             }
                             else
                             {
-                                CameraScript.CameraScriptInstance.SetToastToShow(StringResources.QuestionAlreadyAnsweredToastMessage, CameraScript.ToastLength);
+                                CameraScript.CameraScriptInstance.SetToastToShow(
+                                    StringResources.QuestionAlreadyAnsweredToastMessage, CameraScript.ToastLength);
                             }
                             break;
                         case DataType.Coin:
@@ -62,16 +63,19 @@ namespace Assets.Scripts
                                     GlobalState.Instance.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
                                     _data.Add(new QrCodeData(points, null, dataFromJson.id));
-                                    CameraScript.CameraScriptInstance.SetToastToShow(StringResources.TapCoinToCollectToastMessage, CameraScript.ToastLengthLong);
+                                    CameraScript.CameraScriptInstance.SetToastToShow(
+                                        StringResources.TapCoinToCollectToastMessage, CameraScript.ToastLengthLong);
                                 }
                                 else
                                 {
-                                    CameraScript.CameraScriptInstance.SetToastToShow(StringResources.CoinAlreadyCollectedToastMessage, CameraScript.ToastLength);
+                                    CameraScript.CameraScriptInstance.SetToastToShow(
+                                        StringResources.CoinAlreadyCollectedToastMessage, CameraScript.ToastLength);
                                 }
                             }
                             else
                             {
-                                CameraScript.CameraScriptInstance.SetToastToShow(StringResources.AnswerQuestionFirstToastMessage, CameraScript.ToastLength);
+                                CameraScript.CameraScriptInstance.SetToastToShow(
+                                    StringResources.AnswerQuestionFirstToastMessage, CameraScript.ToastLength);
                             }
                             break;
                     }
