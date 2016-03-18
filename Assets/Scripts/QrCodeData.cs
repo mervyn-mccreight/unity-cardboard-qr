@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using ZXing;
+using Object = UnityEngine.Object;
 
 namespace Assets.Scripts
 {
@@ -13,16 +14,19 @@ namespace Assets.Scripts
         private DateTime _time;
         private DateTime _destroyTime = DateTime.MinValue;
         private bool _forceDestroy;
+        private DataType _dataType;
+
 
         private const float KeepAliveTime = 0.5f;
         private const float InterpolationSpeed = 2f;
 
-        public QrCodeData(ResultPoint[] resultPoints, GameObject model, int id)
+        public QrCodeData(ResultPoint[] resultPoints, GameObject model, int id, DataType dataType)
         {
             _target = resultPoints;
             _model = model;
             Id = id;
             _time = DateTime.UtcNow;
+            _dataType = dataType;
         }
 
         public void Update(ResultPoint[] newResultPoints)
@@ -30,6 +34,29 @@ namespace Assets.Scripts
             _target = newResultPoints;
             _time = DateTime.UtcNow;
             _destroyTime = DateTime.MinValue;
+        }
+
+        public void CreateModel(Transform parent)
+        {
+            GameObject model;
+            switch (_dataType)
+            {
+                case DataType.Coin:
+                    model = Object.Instantiate(Resources.Load("Coin")) as GameObject;
+                    break;
+                case DataType.Particle:
+                    model = Object.Instantiate(Resources.Load("ParticleSystem")) as GameObject;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (model != null)
+            {
+                model.transform.SetParent(parent);
+                model.transform.localPosition = LocalCoinPosition();
+                SetModel(model);
+            }
         }
 
         public void SetModel(GameObject model)
@@ -72,9 +99,7 @@ namespace Assets.Scripts
 
         public override string ToString()
         {
-            var result = _target.Aggregate("",
-                (accumulator, resultPoint) =>
-                    accumulator + String.Format("({0}, {1})", resultPoint.X, resultPoint.Y) + Environment.NewLine);
+            var result = _target.Aggregate("", (accumulator, resultPoint) => accumulator + String.Format("({0}, {1})", resultPoint.X, resultPoint.Y) + Environment.NewLine);
 
             var modelString = "none";
             if (_model != null)

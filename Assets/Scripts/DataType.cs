@@ -3,6 +3,7 @@
     public enum DataType
     {
         Coin,
-        Question
+        Question,
+        Particle
     }
 }

@@ -62,7 +62,7 @@ namespace Assets.Scripts
                                 {
                                     GlobalState.Instance.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
-                                    _data.Add(new QrCodeData(points, null, dataFromJson.id));
+                                    _data.Add(new QrCodeData(points, null, dataFromJson.id, dataFromJson.type));
                                     CameraScript.CameraScriptInstance.SetToastToShow(
                                         StringResources.TapCoinToCollectToastMessage, CameraScript.ToastLengthLong);
                                 }
@@ -77,6 +77,9 @@ namespace Assets.Scripts
                                 CameraScript.CameraScriptInstance.SetToastToShow(
                                     StringResources.AnswerQuestionFirstToastMessage, CameraScript.ToastLength);
                             }
+                            break;
+                        case DataType.Particle:
+                            _data.Add(new QrCodeData(points, null, dataFromJson.id, dataFromJson.type));
                             break;
                     }
                 }
@@ -150,13 +153,7 @@ namespace Assets.Scripts
                 // we have to create the game object referred by the code later in here.
                 if (code.GetModel() == null)
                 {
-                    var coin = Object.Instantiate(Resources.Load("Coin")) as GameObject;
-                    if (coin != null)
-                    {
-                        coin.transform.SetParent(parent);
-                        coin.transform.localPosition = code.LocalCoinPosition();
-                        code.SetModel(coin);
-                    }
+                    code.CreateModel(parent);
                     return;
                 }
 
