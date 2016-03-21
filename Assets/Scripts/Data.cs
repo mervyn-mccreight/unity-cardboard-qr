@@ -1,8 +1,10 @@
 using System;
-using UnityEngine.Serialization;
 
 namespace Assets.Scripts
 {
+    /// <summary>
+    /// Class mapping the content of a QR-code.
+    /// </summary>
     [Serializable]
     public class Data
     {
@@ -16,6 +18,10 @@ namespace Assets.Scripts
 
         public int correctAnswer;
 
+        /// <summary>
+        /// Map QR-code data to Question object.
+        /// </summary>
+        /// <returns>Question corresponding to QR-code data.</returns>
         public Question ToQuestion()
         {
             return new Question(id, question, answers, correctAnswer);

@@ -2,9 +2,14 @@
 
 namespace Assets.Scripts
 {
+    /// <summary>
+    /// Class containing application configuration parameters.
+    /// </summary>
     public class Config
     {
-        // Scene names
+        /// <summary>
+        /// Scene names. Must match the order of <see cref="Config.SceneNames"/> array.
+        /// </summary>
         public enum Scenes
         {
             MainMenu = 0,
@@ -14,7 +19,10 @@ namespace Assets.Scripts
             None = -1
         }
 
-        private static readonly string[] _sceneNames =
+        /// <summary>
+        /// Names of Unity scenes. Must match scene file names.
+        /// </summary>
+        private static readonly string[] SceneNames =
         {
             "MainMenuScene",
             "CameraScene",
@@ -22,17 +30,24 @@ namespace Assets.Scripts
             "HelpScene"
         };
 
+        /// <summary>
+        /// Returns the name of a given scene.
+        /// </summary>
+        /// <param name="scene">Scene</param>
+        /// <returns>Name of corresponding Unity scene file</returns>
         public static string SceneName(Scenes scene)
         {
-            return _sceneNames[(int) scene];
+            return SceneNames[(int) scene];
         }
 
         // API
-        // fh wedel merv
+        // Calls to Mervyn McCreight FH Wedel hosted backend.
         public const string ApiUrlQuestionCount = "http://stud.fh-wedel.de/~inf101368/qrcode/api.php/questioncount";
         public const string ApiUrlQuestions = "http://stud.fh-wedel.de/~inf101368/qrcode/api.php/questions/";
 
-        // storage
+        /// <summary>
+        /// Storage path for global state.
+        /// </summary>
         public static readonly string StatePath = Application.persistentDataPath + "/globalState.dat";
     }
 }

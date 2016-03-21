@@ -1,5 +1,8 @@
 ﻿namespace Assets.Scripts
 {
+    /// <summary>
+    /// Class containing UI string constants to facilitate wording changes.
+    /// </summary>
     public class StringResources
     {
         // main menu texts

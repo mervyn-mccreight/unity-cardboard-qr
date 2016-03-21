@@ -6,6 +6,9 @@ using Object = UnityEngine.Object;
 
 namespace Assets.Scripts
 {
+    /// <summary>
+    /// Handles the model data corresponding to a QR-code.
+    /// </summary>
     public class QrCodeData
     {
         private ResultPoint[] _target;
@@ -16,10 +19,25 @@ namespace Assets.Scripts
         private bool _forceDestroy;
         private DataType _dataType;
 
-
+        /// <summary>
+        /// Time the model stays visible after the QR-code is no longer detected.
+        /// This is needed to prevent flickering of the model when the QR-code is lost for short periods of time, e.g. when the camera re-focuses.
+        /// </summary>
         private const float KeepAliveTime = 0.5f;
+
+        /// <summary>
+        /// Speed in world units per second that the model moves in the direction of the QR-code.
+        /// The model movement is interpolated to prevent it from constantly jumping across the screen when the camera moves.
+        /// </summary>
         private const float InterpolationSpeed = 2f;
 
+        /// <summary>
+        /// Constructs a QrCodeData object.
+        /// </summary>
+        /// <param name="resultPoints">Result points detected by ZXing</param>
+        /// <param name="model">Model to be displayed in front of QR-code. May be null initially and set later.</param> // TODO: remove parameter
+        /// <param name="id">Id of QR-code</param>
+        /// <param name="dataType">Type of object. Used to determine to correct model.</param>
         public QrCodeData(ResultPoint[] resultPoints, GameObject model, int id, DataType dataType)
         {
             _target = resultPoints;
@@ -29,6 +47,10 @@ namespace Assets.Scripts
             _dataType = dataType;
         }
 
+        /// <summary>
+        /// Update the position of the object through new <see cref="ResultPoint"/>s. Also resets the timers used to detroy the object.
+        /// </summary>
+        /// <param name="newResultPoints">Newly detected QR-code position</param>
         public void Update(ResultPoint[] newResultPoints)
         {
             _target = newResultPoints;
@@ -36,6 +58,10 @@ namespace Assets.Scripts
             _destroyTime = DateTime.MinValue;
         }
 
+        /// <summary>
+        /// Creates a model based on the <see cref="DataType"/>.
+        /// </summary>
+        /// <param name="parent"></param>
         public void CreateModel(Transform parent)
         {
             GameObject model;
@@ -74,6 +100,10 @@ namespace Assets.Scripts
             _forceDestroy = true;
         }
 
+        /// <summary>
+        /// Marks the object as to be destroyed.
+        /// It will be destroyed after <see cref="KeepAliveTime"/> seconds have passed without it being updated.
+        /// </summary>
         public void MarkAsDestroy()
         {
             if (_destroyTime == DateTime.MinValue)
@@ -82,7 +112,13 @@ namespace Assets.Scripts
             }
         }
 
-        public bool IsMarkedAsDestroy()
+        /// <summary>
+        /// Determines whether this object should be destroyed at the moment of this method being called.
+        /// That is the case if it is either marked to be destroyed no matter what (see <see cref="ForceMarkAsDestroy"/>),
+        /// or it has been marked and the <see cref="KeepAliveTime"/> has expired.
+        /// </summary>
+        /// <returns>True if the object should be destroyed, false otherwise.</returns>
+        public bool ShouldBeDestroyed()
         {
             if (_forceDestroy)
             {
@@ -110,6 +146,10 @@ namespace Assets.Scripts
             return result + "Type =" + modelString + Environment.NewLine;
         }
 
+        /// <summary>
+        /// Calculates a diagonal across the QR-code in 2D image pixel coordinates.
+        /// </summary>
+        /// <returns>Diagonal vector</returns>
         private Vector3 Diagonal()
         {
             var p1 = new Vector3(_target[0].X, _target[0].Y);
@@ -140,6 +180,10 @@ namespace Assets.Scripts
             return max;
         }
 
+        /// <summary>
+        /// Calculates the models position relative to its parent (the camera texture plane).
+        /// </summary>
+        /// <returns>Local position vector</returns>
         public Vector3 LocalCoinPosition()
         {
             // the three points of interest in a qr code
@@ -172,6 +216,9 @@ namespace Assets.Scripts
             xTransformed -= GlobalState.Instance.PlaneWidth/2;
             zTransformed -= GlobalState.Instance.PlaneHeight/2;
 
+
+            // Note: moving objects around in the scene WILL BREAK THIS CALCULATION!
+
             // Calculated relative to camera texture plane:
             // imaginary plane that the coin will lie on, so that it is in front of the camera texture plane
             var plane = new Plane(Vector3.up, new Vector3(0, 2, 0));
@@ -190,11 +237,19 @@ namespace Assets.Scripts
             return cam + (camToTarget.normalized*enter);
         }
 
+        /// <summary>
+        /// Scales the model to roughly match the size of the QR-code on the plane.
+        /// </summary>
+        /// <returns></returns>
         private Vector3 ScaleFactor()
         {
+            // Empirical values.
             return new Vector3(Diagonal().magnitude/200f, Diagonal().magnitude/200f, Diagonal().magnitude/200f);
         }
 
+        /// <summary>
+        /// Update the model position, scale and rotation. Called from <see cref="QrCodeCollection.Update"/>.
+        /// </summary>
         public void UpdateModel()
         {
             GetModel().transform.localPosition = Interpolate(GetModel().transform.localPosition, LocalCoinPosition());
@@ -204,7 +259,7 @@ namespace Assets.Scripts
 
         private Vector3 Interpolate(Vector3 from, Vector3 to)
         {
-            var traveledDistance = ((float) DateTime.UtcNow.Subtract(_time).TotalSeconds)*InterpolationSpeed;
+            var traveledDistance = (float) DateTime.UtcNow.Subtract(_time).TotalSeconds*InterpolationSpeed;
             var totalDistance = Vector3.Distance(@from, to);
 
             return Vector3.Lerp(@from, to, traveledDistance/totalDistance);

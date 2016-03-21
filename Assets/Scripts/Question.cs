@@ -1,5 +1,8 @@
 ﻿namespace Assets.Scripts
 {
+    /// <summary>
+    /// Class representing a question.
+    /// </summary>
     public class Question
     {
         public int Id { get; set; }
