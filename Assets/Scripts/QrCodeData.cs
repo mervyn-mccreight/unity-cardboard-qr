@@ -35,13 +35,11 @@ namespace Assets.Scripts
         /// Constructs a QrCodeData object.
         /// </summary>
         /// <param name="resultPoints">Result points detected by ZXing</param>
-        /// <param name="model">Model to be displayed in front of QR-code. May be null initially and set later.</param> // TODO: remove parameter
         /// <param name="id">Id of QR-code</param>
         /// <param name="dataType">Type of object. Used to determine to correct model.</param>
-        public QrCodeData(ResultPoint[] resultPoints, GameObject model, int id, DataType dataType)
+        public QrCodeData(ResultPoint[] resultPoints, int id, DataType dataType)
         {
             _target = resultPoints;
-            _model = model;
             Id = id;
             _time = DateTime.UtcNow;
             _dataType = dataType;
