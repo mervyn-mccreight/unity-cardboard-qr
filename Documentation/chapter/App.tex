@@ -57,10 +57,21 @@ Die QuestionScene stellt die zum gescannten QR-Code passende Frage, sowie deren 
 
 \section{Code-Dokumentation}
 \subsection{QR-Code-Erkennung}
-Über die Unity-Klasse \texttt{WebCamTexture} wird auf das aktuelle Kamerabild zugegriffen. Dieser Zugriff ist, wie bei anderen Unity-APIs auch, nur vom Main-Thread aus erlaubt. Um das Durchsuchen des Bilds von der Darstellung der App loszukoppeln erfolgt die QR-Code-Erkennung auf einem separaten Thread. Die Pixeldaten der Kamera werden in der \texttt{Update}-Methode des \texttt{CameraScript} (also einmal pro Frame) in einem Feld gespeichert. Der Thread liest kontinuierlich die Daten aus diesem Feld aus und versucht QR-Codes im Bild zu erkennen. Hierbei kommt die Bibliothek \emph{ZXing} zum Einsatz. Schließlich wird eine Sammlung mit erkannten QR-Codes mit den Ergebnissen aktualisiert (siehe \texttt{QrCodeCollection} und \texttt{QrCodeData}).
+Über die Unity-Klasse \texttt{WebCamTexture} wird auf das aktuelle Kamerabild zugegriffen. Dieser Zugriff ist, wie bei anderen Unity-APIs auch, nur vom Main-Thread aus erlaubt. Um das Durchsuchen des Bilds von der Darstellung der App loszukoppeln erfolgt die QR-Code-Erkennung auf einem separaten Thread. Die Pixeldaten der Kamera werden in der \texttt{Update}-Methode des \texttt{CameraScript} (also einmal pro Frame) in einem Feld gespeichert. Der Thread liest kontinuierlich die Daten aus diesem Feld aus und versucht QR-Codes im Bild zu erkennen. Hierbei kommt die Bibliothek \emph{ZXing} zum Einsatz. Das Ergebnis einer Erkennung besteht aus den Pixelkoordinaten der \emph{Points of Interest}, sowie einer Binärpixelmatrix des QR-Codes selbst, anhand der der Inhalt dekodiert werden kann. Schließlich wird eine Sammlung mit erkannten QR-Codes mit den Ergebnissen aktualisiert (siehe \texttt{QrCodeCollection} und \texttt{QrCodeData}).
 
 \subsection{QR-Code-Verarbeitung}
-Ist bisher noch kein QR-Code im Sichtfeld der Kamera, wird der QR-Code im Anschluss an die Erkennung dekodiert. Basierend auf den enthaltenen Daten soll ein entsprechendes 3D-Objekt erzeugt und dargestellt, oder die Szene gewechselt werden. Das Programm befindet sich zu diesem Zeitpunkt nicht in dem Unity-Main-Thread. Daher kann nicht direkt ein Objekt angelegt werden. An dieser Stelle wird ein entsprechend markiertes \texttt{QrCodeData}-Objekt in die \texttt{QrCodeCollection} eingefügt. Die eigentliche Erzeugung des 3D-Objekts erfolgt in der \texttt{Update}-Methode des \texttt{CameraScript}s und somit auf dem Unity-Main-Thread.
+Ist bisher noch kein QR-Code im Sichtfeld der Kamera, wird der QR-Code im Anschluss an die Erkennung dekodiert. Basierend auf den enthaltenen Daten soll ein entsprechendes 3D-Objekt erzeugt und dargestellt, oder die Szene gewechselt werden. Als Orientierungspunkt dient der Mittelpunkt des QR-Codes. Dieser muss zunächst aus den \emph{Points of Interest} errechnet werden.
+
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=5cm]{qr_code_center}
+    \caption{Mittelpunktberechnung eines QR-Codes anhand seiner POIs}
+    \label{fig:qr_center}
+\end{figure}
+
+Die Verbindungslinie der beiden \emph{Points of Interest}, deren Distanz zueinander am größten ist, bildet die Diagonale. Der Mittelpunkt dieser Diagonale ist das Zentrum des QR-Codes.
+
+Das Programm befindet sich zu dem Zeitpunkt der QR-Code-Verarbeitung nicht in dem Unity-Main-Thread. Daher kann nicht direkt ein Objekt angelegt werden. An dieser Stelle wird ein entsprechend markiertes \texttt{QrCodeData}-Objekt in die \texttt{QrCodeCollection} eingefügt. Die eigentliche Erzeugung des 3D-Objekts erfolgt in der \texttt{Update}-Methode des \texttt{CameraScript}s und somit auf dem Unity-Main-Thread.
 
 Ist bereits ein QR-Code im Sichtfeld, wird seine Position anhand der neu erkannten Positiondaten aktualisiert. Auf Basis der neu erkannten Position wird eine Zielposition für das \texttt{QrCodeData}-Objekt berechnet.
 
@@ -76,7 +87,7 @@ Ist bereits ein QR-Code im Sichtfeld, wird seine Position anhand der neu erkannt
         \includegraphics[width=\textwidth]{position_skizze_richtig}
       \caption{Korrekter Ansatz}
     \end{subfigure}
-    \caption[Positionsberechnung der 3D-Objekte]{Positionsberechnung der 3D-Objekte. Links der naive Ansatz, rechts die korrekte Berechnung.}
+    \caption{Positionsberechnung der 3D-Objekte anhand der Markerposition}
     \label{fig:position_sketch}
 \end{figure}
 
