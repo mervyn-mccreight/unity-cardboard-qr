@@ -34,33 +34,33 @@ Um die Speicherung zu strukturieren, wird automatisch folgendes Dateisystem aufg
 \end{verbatim}
 
 Das Beispiel zeigt das Dateisystem in einem Zustand mit einer angelegten Frage. Man sieht, dass für Fragen und Münzen seperate Ordner anlegt werden. Zwischen Fragen und Münzen herrscht eine implizite 1:1 Verbindung. Daher ist eine Frage eindeutig über ihre ID zu einer Münze zuweisbar. Eine Münze besitzt daher immer die selbe ID wie ihre dazugehörige Frage.
-Das Anlegen einer Frage und ihrer zugehörigen Münze wird in der Datei \emph{process.php} verarbeitet, die durch einen POST-Request beim Absenden des Fragenformulars im Frontend aufgerufen wird. Die zugrundelegenden Datenstrukturen und Funktionen werden in der Datei \emph{data.php} definiert. An dieser Stelle befindet sich die Logik der Serialisierung und der Speicherung im Dateisystem.
+Das Anlegen einer Frage und ihrer zugehörigen Münze wird in der Datei \texttt{process.php} verarbeitet, die durch einen POST-Request beim Absenden des Fragenformulars im Frontend aufgerufen wird. Die zugrundelegenden Datenstrukturen und Funktionen werden in der Datei \texttt{data.php} definiert. An dieser Stelle befindet sich die Logik der Serialisierung und der Speicherung im Dateisystem.
 
-Der lesende Zugriff auf das Backend wurde über eine in PHP entwickelte RESTful-API realisiert. Die Implementierung befindet sich in der Datei \emph{api.php}.
+Der lesende Zugriff auf das Backend wurde über eine in PHP entwickelte RESTful-API realisiert. Die Implementierung befindet sich in der Datei \texttt{api.php}.
 Die RESTful-API bietet folgende Zugriffs-URLs:
 
  \begin{lstlisting}
 GET:
 /questions/	# Liefert ein JSON mit allen aktuell
 		# existenten Fragen.
-/questions/<id>	# Liefert ein JSON mit 
+/questions/<id>	# Liefert ein JSON mit
 		# den Informationen zur Frage
 		# der entsprechenden ID.
 
-/qrcodes/<id>	# Liefert ein JSON mit 
+/qrcodes/<id>	# Liefert ein JSON mit
 		# den Aufruf-URLs der
 		# Google-QRCode-API fuer Frage
 		# und Muenze mit der ID (200x200).
-/qrcodesprint/<id>	# Liefert ein JSON mit 
+/qrcodesprint/<id>	# Liefert ein JSON mit
 		# den Aufruf-URLs der
 		# Google-QRCode-API fuer Frage
 		# und Muenze mit der ID (400x400).
 
-/questioncount/	# Gibt an, wie viele Fragen aktuell 
+/questioncount/	# Gibt an, wie viele Fragen aktuell
 		# existieren.
 
 DELETE:
-/questions/<id>	# Loescht die Frage mit der 
+/questions/<id>	# Loescht die Frage mit der
 		# angegebenen ID.
 \end{lstlisting}
 
@@ -81,4 +81,4 @@ DELETE:
 \section{Frontend}
 Das Frontend besteht aus einer mit Twitter-Bootstrap entwickelten Seite. Das Frontend kommunziert hierbei über die RESTful-API mit dem Backend. Die Seite bietet einen Überblick über alle aktuell existierenden Fragen, zusätzlich aller notwendigen Informationen (Fragetext, Antwortmöglichkeiten und korrekte Antwort).
 Die Fragen werden in einer Tabelle angezeigt. Die Fragen sind hierbei nach ihrer ID sortiert. Ein Klick auf eine Fragezeile öffnet ein Modalfenster, über das es möglich ist eine Frage zu editieren, in einem speziellen Format auszudrucken oder diese unwiderruflich zu löschen. Über einen Klick auf den \emph{Neue Frage anlegen}-Button ist es möglich eine neue Frage zu erstellen.
-Die für die Funktionalität relevanten Funktionen, sofern sie nicht Bootstrap-intern sind, befinden sich in der Datei \emph{overview.js}.
+Die für die Funktionalität relevanten Funktionen, sofern sie nicht Bootstrap-intern sind, befinden sich in der Datei \texttt{overview.js}.
