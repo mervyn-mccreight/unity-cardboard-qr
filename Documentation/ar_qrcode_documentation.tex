@@ -1,0 +1,143 @@
+% das Papierformat zuerst
+\documentclass[a4paper, 12pt, hidelinks]{article}
+
+\usepackage[pdftex]{graphicx}
+
+\usepackage{fancyvrb}
+
+\usepackage[left=35mm,right=35mm,top=25mm,bottom=25mm]{geometry}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[ngermanb]{babel}
+
+\usepackage[hidelinks]{hyperref}
+
+% für bilder
+\usepackage{graphicx}
+% für floats (figures und so)
+\usepackage{float}
+
+\title{Praktikumsbericht}
+\author{Mervyn McCreight}
+\date{\today}
+
+\newenvironment{mySourceCode}
+{\begin{list}{}{\setlength{\leftmargin}{2em}}\item\scriptsize\bfseries}
+{\end{list}}
+
+% hier beginnt das Dokument
+\begin{document}
+
+% =======================================================================
+% Titelseite
+
+
+ % FH-Wedel Header.
+\begin{figure}[h]
+\centering
+\includegraphics[width=350px]{fhwedel}
+\label{fig:fhwedel}
+\end{figure}
+
+
+
+
+% nicht zu parsende Zeichen
+\begin{verbatim}
+
+
+\end{verbatim}
+
+\begin{center}
+\textbf{\LARGE{Praktikumsbericht}}\\
+von Mervyn McCreight\\
+(MInf 8770)
+\end{center}
+
+\begin{verbatim}
+\end{verbatim}
+
+\begin{center}
+\textbf{\today}
+\end{center}
+
+% nicht zu parsende Zeichen
+\begin{verbatim}
+
+\end{verbatim}
+
+\begin{center}
+\textbf{\large{Fachbereich: Informatik}} \\
+\textbf{\large{Studiengang: Medieninformatik}}
+\end{center}
+
+% nicht zu parsende Zeichen
+\begin{verbatim}
+
+\end{verbatim}
+
+
+% Name && Adresse des Arbeitgebers
+\begin{center}
+\textbf{\large{blau Mobilfunk GmbH}} \\
+\textbf{\large{20459 Hamburg, Neuer Steinweg 28}} \\
+\end{center}
+
+% nicht zu parsende Zeichen
+\begin{verbatim}
+\end{verbatim}
+
+% Arbeitsbezeichnung.
+\begin{center}
+\textbf{IT-Developer} \\
+\textbf{(Java/Backend)} \\
+\end{center}
+
+% nicht zu parsende Zeichen
+\begin{verbatim}
+
+
+\end{verbatim}
+
+% Tabellarische Aufzählung der Dauer und der Betreuer.
+\begin{flushleft}
+\begin{tabular}{llll}
+
+\textbf{Dauer:}
+& & & 9. September 2013 bis 15. Dezember 2013
+\\
+\\
+\textbf{betreut durch:}
+& & & Torsten Mumme \emph{(blau Mobilfunk GmbH)} \\
+& & & Prof. Andreas Häuslein \emph{(FH Wedel)}
+
+\end{tabular}
+\end{flushleft}
+
+
+\newpage
+
+
+\newpage
+
+% =======================================================================
+% Inhaltsverzeichnis
+
+\tableofcontents
+\newpage
+
+% -----------------------------------------------------------------------
+% Introduction
+
+\include{chapter/Zielsetzung}
+\include{chapter/Analyse}
+\include{chapter/tdot}
+\include{chapter/App}
+\include{chapter/Ausblick}
+
+
+% ===================================================0
+% End of Document
+\end{document}
