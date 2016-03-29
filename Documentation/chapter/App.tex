@@ -59,6 +59,32 @@ Die QuestionScene stellt die zum gescannten QR-Code passende Frage, sowie deren 
 \subsection{QR-Code-Erkennung}
 Über die Unity-Klasse \texttt{WebCamTexture} wird auf das aktuelle Kamerabild zugegriffen. Dieser Zugriff ist, wie bei anderen Unity-APIs auch, nur vom Main-Thread aus erlaubt. Um das Durchsuchen des Bilds von der Darstellung der App loszukoppeln erfolgt die QR-Code-Erkennung auf einem separaten Thread. Die Pixeldaten der Kamera werden in der \texttt{Update}-Methode des \texttt{CameraScript} (also einmal pro Frame) in einem Feld gespeichert. Der Thread liest kontinuierlich die Daten aus diesem Feld aus und versucht QR-Codes im Bild zu erkennen. Hierbei kommt die Bibliothek \emph{ZXing} zum Einsatz. Schließlich wird eine Sammlung mit erkannten QR-Codes mit den Ergebnissen aktualisiert (siehe \texttt{QrCodeCollection} und \texttt{QrCodeData}).
 
+\subsection{QR-Code-Verarbeitung}
+Ist bisher noch kein QR-Code im Sichtfeld der Kamera, wird der QR-Code im Anschluss an die Erkennung dekodiert. Basierend auf den enthaltenen Daten soll ein entsprechendes 3D-Objekt erzeugt und dargestellt, oder die Szene gewechselt werden. Das Programm befindet sich zu diesem Zeitpunkt nicht in dem Unity-Main-Thread. Daher kann nicht direkt ein Objekt angelegt werden. An dieser Stelle wird ein entsprechend markiertes \texttt{QrCodeData}-Objekt in die \texttt{QrCodeCollection} eingefügt. Die eigentliche Erzeugung des 3D-Objekts erfolgt in der \texttt{Update}-Methode des \texttt{CameraScript}s und somit auf dem Unity-Main-Thread.
+
+Ist bereits ein QR-Code im Sichtfeld, wird seine Position anhand der neu erkannten Positiondaten aktualisiert. Auf Basis der neu erkannten Position wird eine Zielposition für das \texttt{QrCodeData}-Objekt berechnet.
+
+\begin{figure}[!h]
+  \centering
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+        \includegraphics[width=\textwidth]{position_skizze_falsch}
+      \caption{Naiver Ansatz}
+    \end{subfigure}%
+    \begin{subfigure}{0.42\textwidth}
+      \centering
+        \includegraphics[width=\textwidth]{position_skizze_richtig}
+      \caption{Korrekter Ansatz}
+    \end{subfigure}
+    \caption[Positionsberechnung der 3D-Objekte]{Positionsberechnung der 3D-Objekte. Links der naive Ansatz, rechts die korrekte Berechnung.}
+    \label{fig:position_sketch}
+\end{figure}
+
+Bei der Berechnung der Positionierung muss beachtet werden, dass sich das Objekt nicht direkt auf der Leinwand, sondern auf einer gedachten Ebene davor befindet. Um zu gewährleisten, dass ein eingeblendetes Objekt korrekt vor dem QR-Code angezeigt wird, darf nicht die erkannte Position des QR-Codes übernommen werden. Stattdessen muss ein Strahl vom Augpunkt zur Position des QR-Codes auf der Leinwand geschossen werden. Der Schnittpunkt des Strahls mit der Objekt-Ebene ist die korrekte Position des 3D-Objekts.
+
+Die Anpassung der Position zwischen aktueller und Zielposition wird in jedem Frame linear interpoliert, damit die Bewegung des 3D-Objekts flüssiger dargestellt wird. Leicht ungenaue Positionserkennung und eine handgeführte Kamera werden dadurch ausgeglichen.
+
+
 \section{Google Play}
 Wie eine App im Google Play Store veröffentlicht wird kann hier nachgelesen werden: http://developer.android.com/distribute/googleplay/start.html.
 
