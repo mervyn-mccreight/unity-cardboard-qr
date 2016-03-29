@@ -5,7 +5,12 @@ Die Umsetzung des Projekts erforderte vorerst eine genauere Analyse des Projekts
 Die grundlegende Überlegung ist, die Realität auf einem Handy in der Art darzustellen, dass diese nachträglich beliebig erweiterbar ist. Dies geschieht beispielsweise durch das Einblenden von nur virtuell existenten Objekten. Dadurch wird dem Benutzer eine Erweiterung der eigentlichen Realität vorgetäuscht.
 Die Realität wird hierfür durch die Kamera des mobilen Gerätes aufgefangen und verarbeitet. Für die nachträgliche Bearbeitung reicht es jedoch nicht, das Bild der Kamera in einer Live-View wiederzugeben. Stattdessen muss eine 3D-Umgebung existieren, die es ermöglicht, nicht existente Objekte in das Bild einzufügen.
 
-(Hier eine Skizze zum theoretischen Aufbau der Szene)
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=8cm]{szene_skizze}
+    \caption{Aufbau der AR-Szene}
+    \label{fig:scene_sketch}
+\end{figure}
 
 Die Lösung ist eine simulierte Leinwand in einer 3D-Umgebung. Hierfür wird eine Fläche erstellt, die orthogonal zur Kamera steht. Diese Fläche wird mit dem Live-Bild der Kamera des mobilen Gerätes texturiert. Nun ist es möglich fremde Objekte in das Kamerabild einzufügen, indem man diese Objekte zwischen Leinwand und Kamera platziert.
 Wichtig hierbei ist, dass die Leinwandfläche zu jeder Zeit orthogonal zur Blickrichtung der Kamera ist, da der Benutzer ansonsten den Abstand zwischen virtuellem Objekt und Leinwand sehen kann, wodurch die Illusion verloren geht. Ein weiteres Problem ist die Simulation von Tiefe auf diese Art und Weise. Die virtuellen Objekte stehen in der 3D-Umgebung in einem festen Abstand zur Leinwand. Wenn ein Objekt in der eigentlichen Realität nun weiter entfernt steht als ein anderes, muss die Tiefe durch eine Veränderung der Größe simuliert werden.
