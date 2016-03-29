@@ -19,7 +19,9 @@ Um eine noch realistischere Darstellung der virtuellen Objekte zu ermöglichen, 
 
 \section{Marker}
 Ein genereller Ansatz zur Realisierung von Augmented Reality ist der Einsatz von Markern. Die Marker dienen als Stellvertreter von virtuellen Objekten in der Realität. Das Programm, welches Augmented Reality simulieren möchte, kann nun die Position und Orientierung der Marker durch Verarbeitung des Kamerabildes wahrnehmen, und virtuelle Objekte an dieser Stelle platzieren.
+
 Eine wichtige Entscheidung ist die Wahl der Art des Markers. In diesem Projekt wurden sich für QR-Codes als Marker entschieden.
+
 Bei dem QR-Code handelt es sich um ein weit verbreitetes Verfahren. Es existieren daher viele Bibliotheken, die das Verarbeiten von QR-Codes realisieren. Des weiteren ist das Erkennungs- und Leseverfahren für QR-Codes durch eine automatische Fehlerkorrektur sehr robust. Das ist wichtig, da die Auflösung des Kamerabildes für eine Live-Verarbeitung auf einem mobilen Gerät nicht zu hoch sein darf. Trotzdem müssen die Marker zuverlässig erkannt werden. Ein weiterer Vorteil ist, dass QR-Codes zusätzlich zur Position noch weitere Informationen im QR-Code selbst tragen können. Auf diese Weise ist es möglich, abhängig vom Marker verschiedene Inhalte einzublenden.
 
 \section{Entwicklungsumgebung}
