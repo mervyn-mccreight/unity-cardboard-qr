@@ -54,3 +54,10 @@ Die gesamte Logik der CameraScene wird durch \texttt{CameraScript.cs} gehandhabt
 \subsubsection{QuestionScene}
 \label{subs:QuestionScene}
 Die QuestionScene stellt die zum gescannten QR-Code passende Frage, sowie deren Antwortmöglichkeiten dar. Die Reihenfolge der Antworten wird bei jedem Aufruf einer Frage zufällig durchgemischt. Der Nutzer kann durch Tippen eine Antwort auswählen und erhält ein visuelles und akustisches Feedback, ob seine Wahl korrekt war. Auch diese Szene basiert im Kern auf einem Canvas, das Text-Objekte und Buttons enthält und mit dem Skript \texttt{QuestionUi.cs} verknüpft ist.
+
+\section{Code-Dokumentation}
+
+\section{Google Play}
+Wie eine App im Google Play Store veröffentlicht wird kann hier nachgelesen werden: http://developer.android.com/distribute/googleplay/start.html.
+
+Zu beachten ist, dass man aus Unity ein \textbf{signiertes} APK für den Upload im Play Store exportiert. Dafür muss in Unity unter \emph{Edit \textrightarrow\ Project Settings \textrightarrow\ Player \textrightarrow\ Android Tab \textrightarrow\ Publishing Settings} ein existierender Keystore eingetragen oder ein neuer angelegt werden. Anschließend kann über \emph{File \textrightarrow\ Build Settings} ein Android Build gestartet werden, der den gewählten Keystore und Alias verwendet, um das Package zu signieren. Der Keystore muss unbedingt sicher aufbewahrt werden, da Updates für eine einmal veröffentlichte App nur mit dem selben Keystore und Alias erneut signiert werden können. Geht der Keystore verloren, muss auch die App im Play Store neu angelegt werden (mehr Details hier: http://developer.android.com/tools/publishing/app-signing.html\#secure-key).
