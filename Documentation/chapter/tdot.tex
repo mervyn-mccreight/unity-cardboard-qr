@@ -79,3 +79,6 @@ DELETE:
 %\end{lstlisting}
 
 \section{Frontend}
+Das Frontend besteht aus einer mit Twitter-Bootstrap entwickelten Seite. Das Frontend kommunziert hierbei über die RESTful-API mit dem Backend. Die Seite bietet einen Überblick über alle aktuell existierenden Fragen, zusätzlich aller notwendigen Informationen (Fragetext, Antwortmöglichkeiten und korrekte Antwort).
+Die Fragen werden in einer Tabelle angezeigt. Die Fragen sind hierbei nach ihrer ID sortiert. Ein Klick auf eine Fragezeile öffnet ein Modalfenster, über das es möglich ist eine Frage zu editieren, in einem speziellen Format auszudrucken oder diese unwiderruflich zu löschen. Über einen Klick auf den \emph{Neue Frage anlegen}-Button ist es möglich eine neue Frage zu erstellen.
+Die für die Funktionalität relevanten Funktionen, sofern sie nicht Bootstrap-intern sind, befinden sich in der Datei \emph{overview.js}.
