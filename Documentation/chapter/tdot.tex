@@ -1,1 +1,81 @@
 \chapter{Tag der offenen Tür}
+
+Die Entscheidung, mit Hilfe des Projektergebnisses eine Schnitzeljagd auf dem “Tag der offenen Tür” der FH-Wedel zu veranstalten, resultierte in verschiedene zusätzliche, auch innerhalb der Applikation logische, Anforderungen.
+Der Ablauf der Schnitzeljagd wurde folgendermaßen entschieden:
+
+\begin{itemize}
+\item Es existieren QR-Codes, die Fragen beinhalten
+\item Zu jeder Frage existiert ein QR-Code, der eine Münze beinhaltet
+\item Die Münz-QR-Codes werden erst “freigeschaltet”, wenn ein Benutzer die zugehörige Frage korrekt beantwortet hat
+\item Die Münzen müssen einmalig einsammelbar sein
+\item Ein Benutzer hat die Schnitzeljagd gewonnen, wenn er alle Münzen eingesammelt hat
+\end{itemize}
+Folgende Anforderungen wurden für das Fragesystem formuliert:
+
+\begin{itemize}
+\item Die Fragen müssen dynamisch über ein Frontend ersichtlich und anlegbar sein
+\item Die Applikation muss mit einem Fragen-Backend kommunizieren, um die Fragen zu erhalten und auswerten zu können
+\end{itemize}
+
+Hierfür müssen ein zusätzliches Front- und Backend entwickelt werden, dass die verschiedenen Fragen und Münzen verarbeitet, und dazu in der Lage ist für beide entsprechende QR-Codes zu generieren.
+
+\section{Backend}
+Das Backend wurde in PHP entwickelt. Die Entscheidung wurde getroffen, da der Server, auf dem das Backend laufen sollte, PHP bereits vorkonfiguriert hatte.
+
+Das Persistieren der verschiedenen Fragen und dazugehörigen Münzen geschieht direkt über das Dateisystem. Hierfür werden für die Fragen- und Münzinformationen Dateien angelegt, die den entsprechenden Inhalt tragen. Die Informationen in den Dateien werden im JSON-Format hinterlegt.
+Um die Speicherung zu strukturieren, wird automatisch folgendes Dateisystem aufgebaut, sobald eine Frage angelegt wird:
+
+\begin{verbatim}
+<backend-root>
++-- question
+|   +-- 1.json
++-- coin
+|   +-- 1.json
+\end{verbatim}
+
+Das Beispiel zeigt das Dateisystem in einem Zustand mit einer angelegten Frage. Man sieht, dass für Fragen und Münzen seperate Ordner anlegt werden. Zwischen Fragen und Münzen herrscht eine implizite 1:1 Verbindung. Daher ist eine Frage eindeutig über ihre ID zu einer Münze zuweisbar. Eine Münze besitzt daher immer die selbe ID wie ihre dazugehörige Frage.
+Das Anlegen einer Frage und ihrer zugehörigen Münze wird in der Datei \emph{process.php} verarbeitet, die durch einen POST-Request beim Absenden des Fragenformulars im Frontend aufgerufen wird. Die zugrundelegenden Datenstrukturen und Funktionen werden in der Datei \emph{data.php} definiert. An dieser Stelle befindet sich die Logik der Serialisierung und der Speicherung im Dateisystem.
+
+Der lesende Zugriff auf das Backend wurde über eine in PHP entwickelte RESTful-API realisiert. Die Implementierung befindet sich in der Datei \emph{api.php}.
+Die RESTful-API bietet folgende Zugriffs-URLs:
+
+ \begin{lstlisting}
+GET:
+/questions/	# Liefert ein JSON mit allen aktuell
+		# existenten Fragen.
+/questions/<id>	# Liefert ein JSON mit 
+		# den Informationen zur Frage
+		# der entsprechenden ID.
+
+/qrcodes/<id>	# Liefert ein JSON mit 
+		# den Aufruf-URLs der
+		# Google-QRCode-API fuer Frage
+		# und Muenze mit der ID (200x200).
+/qrcodesprint/<id>	# Liefert ein JSON mit 
+		# den Aufruf-URLs der
+		# Google-QRCode-API fuer Frage
+		# und Muenze mit der ID (400x400).
+
+/questioncount/	# Gibt an, wie viele Fragen aktuell 
+		# existieren.
+
+DELETE:
+/questions/<id>	# Loescht die Frage mit der 
+		# angegebenen ID.
+\end{lstlisting}
+
+%\begin{lstlisting}
+%GET:
+%/questions                                    # Liefert ein JSON mit allen aktuell existenten Fragen.
+%/questions/<id>                          # Liefert ein JSON mit den Informationen zur Frage der entsprechenden ID.
+%
+%/qrcodes/<id>                             # Liefert ein JSON mit den Aufruf-URLs der Google-QRCode-API für Frage und Münze mit der ID 200x200.
+%/qrcodesprint/<id>                      # Liefert ein JSON mit den Aufruf-URLs der Google-QRCode-API für Frage und Münze mit der ID (400x400).
+%
+%/questioncount                             # Gibt an, wieviele Fragen aktuell existieren.
+%
+%DELETE:
+%/questions/<id>                           # Löscht die Frage mit der angegebenen ID.
+%\end{lstlisting}
+
+\section{Frontend}
