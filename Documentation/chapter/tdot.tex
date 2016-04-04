@@ -46,27 +46,27 @@ Die RESTful-API bietet folgende Zugriffs-URLs:
 
  \begin{lstlisting}
 GET:
-/questions/	# Liefert ein JSON mit allen aktuell
-		# existenten Fragen.
-/questions/<id>	# Liefert ein JSON mit
-		# den Informationen zur Frage
-		# der entsprechenden ID.
+/questions/         # Liefert ein JSON mit allen aktuell
+                    # existenten Fragen.
+/questions/<id>     # Liefert ein JSON mit
+                    # den Informationen zur Frage
+                    # der entsprechenden ID.
 
-/qrcodes/<id>	# Liefert ein JSON mit
-		# den Aufruf-URLs der
-		# Google-QRCode-API fuer Frage
-		# und Muenze mit der ID (200x200).
-/qrcodesprint/<id>	# Liefert ein JSON mit
-		# den Aufruf-URLs der
-		# Google-QRCode-API fuer Frage
-		# und Muenze mit der ID (400x400).
+/qrcodes/<id>       # Liefert ein JSON
+                    # den Aufruf-URLs der
+                    # Google-QRCode-API fuer
+                    # und Muenze mit der ID (200x200).
+/qrcodesprint/<id>  # Liefert ein JSON mit
+                    # den Aufruf-URLs der
+                    # Google-QRCode-API fuer Frage
+                    # und Muenze mit der ID (400x400).
 
-/questioncount/	# Gibt an, wie viele Fragen aktuell
-		# existieren.
+/questioncount/     # Gibt an, wie viele Fragen aktuell
+                    # existieren.
 
 DELETE:
-/questions/<id>	# Loescht die Frage mit der
-		# angegebenen ID.
+/questions/<id>     # Loescht die Frage mit der
+                    # angegebenen ID.
 \end{lstlisting}
 
 \subsection{JSON-Format}
