@@ -9,7 +9,7 @@ namespace Assets.Scripts
     /// <summary>
     /// Handles the model data corresponding to a QR-code.
     /// </summary>
-    public class QrCodeData
+    public abstract class QrCodeData
     {
         private ResultPoint[] _target;
         private GameObject _model;
@@ -17,7 +17,6 @@ namespace Assets.Scripts
         private DateTime _time;
         private DateTime _destroyTime = DateTime.MinValue;
         private bool _forceDestroy;
-        private DataType _dataType;
 
         /// <summary>
         /// Time the model stays visible after the QR-code is no longer detected.
@@ -36,13 +35,11 @@ namespace Assets.Scripts
         /// </summary>
         /// <param name="resultPoints">Result points detected by ZXing</param>
         /// <param name="id">Id of QR-code</param>
-        /// <param name="dataType">Type of object. Used to determine to correct model.</param>
-        public QrCodeData(ResultPoint[] resultPoints, int id, DataType dataType)
+        public QrCodeData(ResultPoint[] resultPoints, int id)
         {
             _target = resultPoints;
             Id = id;
             _time = DateTime.UtcNow;
-            _dataType = dataType;
         }
 
         /// <summary>
@@ -60,28 +57,7 @@ namespace Assets.Scripts
         /// Creates a model based on the <see cref="DataType"/>.
         /// </summary>
         /// <param name="parent"></param>
-        public void CreateModel(Transform parent)
-        {
-            GameObject model;
-            switch (_dataType)
-            {
-                case DataType.Coin:
-                    model = Object.Instantiate(Resources.Load("Coin")) as GameObject;
-                    break;
-                case DataType.Particle:
-                    model = Object.Instantiate(Resources.Load("ParticleSystem")) as GameObject;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            if (model != null)
-            {
-                model.transform.SetParent(parent);
-                model.transform.localPosition = LocalCoinPosition();
-                SetModel(model);
-            }
-        }
+        public abstract void CreateModel(Transform parent);
 
         public void SetModel(GameObject model)
         {

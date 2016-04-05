@@ -76,7 +76,7 @@ namespace Assets.Scripts
                                     // If it's a coin that has not been collected yet, add a new data object to the collection to track it.
                                     GlobalState.Instance.CurrentCoin = dataFromJson.id;
                                     // null here, since we can not access unity api to create a game object yet.
-                                    _data.Add(new QrCodeData(points, dataFromJson.id, dataFromJson.type));
+                                    _data.Add(new QrCodeDataCoin(points, dataFromJson.id));
                                     CameraScript.CameraScriptInstance.SetToastToShow(
                                         StringResources.TapCoinToCollectToastMessage, CameraScript.ToastLengthLong);
                                 }
@@ -94,7 +94,7 @@ namespace Assets.Scripts
                             break;
                         case DataType.Particle:
                             // If it's a particle, add a new data object to track it.
-                            _data.Add(new QrCodeData(points, dataFromJson.id, dataFromJson.type));
+                            _data.Add(new QrCodeDataParticle(points, dataFromJson.id, Color.red, Color.cyan));
                             break;
                     }
                 }
