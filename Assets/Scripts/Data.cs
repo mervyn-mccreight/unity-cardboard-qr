@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -18,6 +19,30 @@ namespace Assets.Scripts
 
         public int correctAnswer;
 
+        // relevant for particle systems
+        public string startColor;
+        public string endColor;
+
+        public Color StartColor
+        {
+            get
+            {
+                Color result = new Color();
+                ColorUtility.TryParseHtmlString(startColor, out result);
+                return result;
+            }
+        }
+
+        public Color EndColor
+        {
+            get
+            {
+                Color result = new Color();
+                ColorUtility.TryParseHtmlString(endColor, out result);
+                return result;
+            }
+        }
+
         /// <summary>
         /// Map QR-code data to Question object.
         /// </summary>
@@ -29,8 +54,8 @@ namespace Assets.Scripts
 
         public override string ToString()
         {
-            return string.Format("Id: {0}, Type: {1}, Question: {2}, Answers: {3}, CorrectAnswer: {4}", id, type,
-                question, answers, correctAnswer);
+            return string.Format("Id: {0}, Type: {1}, Question: {2}, Answers: {3}, CorrectAnswer: {4}, StartColor: {5}, EndColor: {6}", id, type,
+                question, answers, correctAnswer, StartColor, EndColor);
         }
     }
 }

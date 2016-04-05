@@ -50,6 +50,7 @@ namespace Assets.Scripts
                 {
                     // ... and if that worked, handle it based on its type:
                     _contentString = decoderResult.Text;
+
                     var dataFromJson = JsonUtility.FromJson<Data>(_contentString);
 
                     switch (dataFromJson.type)
@@ -94,7 +95,7 @@ namespace Assets.Scripts
                             break;
                         case DataType.Particle:
                             // If it's a particle, add a new data object to track it.
-                            _data.Add(new QrCodeDataParticle(points, dataFromJson.id, Color.red, Color.cyan));
+                            _data.Add(new QrCodeDataParticle(points, dataFromJson.id, dataFromJson.StartColor, dataFromJson.EndColor));
                             break;
                     }
                 }
