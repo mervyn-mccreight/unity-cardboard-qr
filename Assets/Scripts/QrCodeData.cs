@@ -7,7 +7,8 @@ using Object = UnityEngine.Object;
 namespace Assets.Scripts
 {
     /// <summary>
-    /// Handles the model data corresponding to a QR-code.
+    /// Abstract class handling the model data corresponding to a QR-code.
+    /// Actual model creation is handled by concrete subclasses.
     /// </summary>
     public abstract class QrCodeData
     {
@@ -54,9 +55,9 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// Creates a model based on the <see cref="DataType"/>.
+        /// Creates a model representing the QR code.
         /// </summary>
-        /// <param name="parent"></param>
+        /// <param name="parent">Parent that the new model is attached to</param>
         public abstract void CreateModel(Transform parent);
 
         public void SetModel(GameObject model)

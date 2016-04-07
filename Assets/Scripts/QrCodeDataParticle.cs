@@ -4,6 +4,9 @@ using Object = UnityEngine.Object;
 
 namespace Assets.Scripts
 {
+    /// <summary>
+    /// Handles the "model" data for particle system QR codes.
+    /// </summary>
     public class QrCodeDataParticle : QrCodeData {
         private readonly Color _startColor;
         private readonly Color _endColor;
